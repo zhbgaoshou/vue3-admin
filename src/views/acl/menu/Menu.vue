@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+console.log("刷新完成");
+</script>
 
 <template>
   <div>acl/menu</div>

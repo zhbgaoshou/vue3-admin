@@ -7,5 +7,11 @@ import "element-plus/dist/index.css";
 
 import router from "./router";
 import pinia from "./store";
+import globalComponent from "@/plugin";
 
-createApp(App).use(ElementPlus).use(router).use(pinia).mount("#app");
+createApp(App)
+  .use(ElementPlus)
+  .use(router)
+  .use(pinia)
+  .use(globalComponent)
+  .mount("#app");

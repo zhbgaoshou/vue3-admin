@@ -1,59 +1,58 @@
 import type { RouteRecordRaw } from "vue-router";
-import Layout from "@/layout/Layout.vue";
 
 export const menuRoutes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: Layout,
+    component: () => import("@/layout/Layout.vue"),
     name: "layout",
     redirect: "/home",
     children: [
       {
-        path: "home",
+        path: "/home",
         component: () => import("@views/home/Home.vue"),
         name: "home",
         meta: {
           title: "首页",
-          icon: "",
+          icon: "HomeFilled",
         },
       },
     ],
   },
   {
     path: "/acl",
-    component: Layout,
+    component: () => import("@/layout/Layout.vue"),
     name: "acl",
     redirect: "/acl/user",
     meta: {
       title: "权限管理",
-      icon: "",
+      icon: "Connection",
     },
     children: [
       {
-        path: "user",
+        path: "/acl/user",
         component: () => import("@views/acl/user/User.vue"),
         name: "user",
         meta: {
           title: "用户管理",
-          icon: "",
+          icon: "UserFilled",
         },
       },
       {
-        path: "rule",
+        path: "/acl/rule",
         component: () => import("@views/acl/rule/Rule.vue"),
         name: "rule",
         meta: {
           title: "角色管理",
-          icon: "",
+          icon: "Lock",
         },
       },
       {
-        path: "menu",
+        path: "/acl/menu",
         component: () => import("@views/acl/menu/Menu.vue"),
         name: "menu",
         meta: {
           title: "菜单管理",
-          icon: "",
+          icon: "Operation",
         },
       },
     ],
