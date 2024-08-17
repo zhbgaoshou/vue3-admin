@@ -17,15 +17,15 @@ const refresh = ref<boolean>(true);
 <template>
   <div class="flex">
     <!-- 侧边栏(左边) -->
-    <div class="w-[230px] h-[100vh] bg-slate-500 flex flex-col">
+    <div :class="{coll:menuStore.isColl}" class="w-[200px] h-[100vh] bg-slate-500 flex flex-col transition-all duration-700" >
       <Logo />
       <el-scrollbar class="flex-1">
         <el-menu
-          :collapse="false"
+          :collapse="menuStore.isColl"
           style="border: none"
           :default-active="$route.path"
           active-text-color="#ffd04b"
-          background-color="#545c64"
+          background-color="bg-slate-500"
           text-color="#fff"
           router
         >
@@ -53,3 +53,9 @@ const refresh = ref<boolean>(true);
     </div>
   </div>
 </template>
+
+<style>
+.coll {
+  width: 60px !important;
+}
+</style>

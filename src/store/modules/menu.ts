@@ -5,9 +5,11 @@ import { menuRoutes } from '@/router/routes'
 
 const useMenuStore = defineStore("menu", () => {
     const menuList = ref(menuRoutes)
+    let isColl = ref(false)
     
     return {
-       menuList
+       menuList,
+       isColl
     }
 });
 

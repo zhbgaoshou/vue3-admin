@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 
+import useMenuStore from '@/store/modules/menu'
+const menuStore = useMenuStore()
+
 const $route = useRoute();
 
 function onFold() {
-  console.log("缩放");
+  menuStore.isColl = !menuStore.isColl
 }
+// Expand
 </script>
 
 <template>
   <el-icon class="mx-[5px]">
     <!-- 缩放图标 -->
-    <component is="Fold" @click="onFold"></component>
+    <component :is="menuStore.isColl ? 'Fold' : 'Expand'" @click="onFold"></component>
   </el-icon>
   <el-breadcrumb separator-icon="Right">
     <el-breadcrumb-item
