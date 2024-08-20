@@ -29,7 +29,7 @@ const userStore = useUserStore();
       </div>
       <!-- 消息 -->
       <div
-        class="rounded-md text-slate-800 bg-sky-100 max-w-[800px]"
+        class="rounded-md text-slate-800 bg-sky-100"
         :class="{ 'w-max': role === 'user' }"
       >
         <MdPreview :modelValue="content" class="!bg-transparent" />

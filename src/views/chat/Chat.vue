@@ -11,6 +11,14 @@ import useChatStore from "@/store/modules/chat";
 const chatStore = useChatStore();
 let text = ref("");
 
+const tp = ref(null);
+function scrollTop() {
+  const el = tp.value as any;
+  el.scrollTo({
+    top: el.scrollHeight,
+    behavior: "smooth",
+  });
+}
 onUpdated(() => {
   scrollTop();
 });
@@ -21,7 +29,6 @@ async function send(content: string) {
   const userMessage: chatParams = {
     role: "user",
     content,
-    mode: "gpt-3.5-turbo",
   };
 
   chatStore.addMessage(userMessage);
@@ -43,7 +50,6 @@ async function send(content: string) {
         const aiData: chatParams = {
           role: "assistant",
           content: text.value, // 最终生成的完整内容
-          mode: "gpt-3.5-turbo",
         };
         chatStore.addMessage(aiData);
         text.value = "";
@@ -56,15 +62,6 @@ async function send(content: string) {
     console.log(error);
     ElMessage.error("error");
   }
-}
-
-const tp = ref(null);
-function scrollTop() {
-  const el = tp.value as any;
-  el.scrollTo({
-    top: el.scrollHeight,
-    behavior: "smooth",
-  });
 }
 
 function file(file: FileList) {
