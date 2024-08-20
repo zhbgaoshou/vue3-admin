@@ -17,7 +17,10 @@ const refresh = ref<boolean>(true);
 <template>
   <div class="flex">
     <!-- 侧边栏(左边) -->
-    <div :class="{coll:menuStore.isColl}" class="w-[200px] h-[100vh] bg-slate-500 flex flex-col transition-all duration-700" >
+    <div
+      :class="{ coll: menuStore.isColl }"
+      class="w-[200px] h-[100vh] bg-slate-500 flex flex-col transition-all duration-700"
+    >
       <Logo />
       <el-scrollbar class="flex-1">
         <el-menu
@@ -36,7 +39,7 @@ const refresh = ref<boolean>(true);
     <!-- 右边 -->
     <div class="h-[100vh] flex-1 flex flex-col">
       <!-- 顶部 -->
-      <div class="h-[50px] flex justify-between items-center">
+      <div class="h-[50px] flex justify-between items-center shadow-sm">
         <!-- 顶部左边 -->
         <div class="flex">
           <Breadcrumb />
@@ -47,7 +50,7 @@ const refresh = ref<boolean>(true);
         </div>
       </div>
       <!-- main -->
-      <div class="flex-1 bg-sky-500">
+      <div class="flex-1 p-[10px] h-0">
         <router-view v-if="refresh" />
       </div>
     </div>

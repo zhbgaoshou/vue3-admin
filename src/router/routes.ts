@@ -57,6 +57,23 @@ export const menuRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/chat",
+    component: () => import("@/layout/Layout.vue"),
+    name: "chat",
+    redirect: "/chat/3.5",
+    children: [
+      {
+        path: "/chat/3.5",
+        component: () => import("@views/chat/Chat.vue"),
+        name: "chat",
+        meta: {
+          title: "chatGPT",
+          icon: "ChatRound",
+        },
+      },
+    ],
+  },
 ];
 
 const routes: RouteRecordRaw[] = [

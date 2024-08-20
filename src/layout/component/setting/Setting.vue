@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { nextTick } from "vue";
+import { beforeLoginOut } from "@/utils/local";
+import { useRouter, useRoute } from "vue-router";
+import useUserStore from "@/store/modules/user";
+
+const $router = useRouter();
+const $route = useRoute();
+const userStore = useUserStore();
 
 const refresh = defineModel("refresh");
 function onRefresh() {
@@ -15,6 +22,16 @@ function onfullScreen() {
     ? document.exitFullscreen() // 退出全屏
     : document.documentElement.requestFullscreen(); // 进入全屏
 }
+
+function loginOut() {
+  beforeLoginOut();
+  $router.push({
+    path: "/login",
+    query: {
+      re: $route.path,
+    },
+  });
+}
 </script>
 
 <template>
@@ -22,19 +39,19 @@ function onfullScreen() {
   <el-button icon="FullScreen" circle @click="onfullScreen" />
   <el-button icon="Setting" circle />
   <img
-    src="https://p3-passport.byteacctimg.com/img/user-avatar/f258c2ef7608c422968525439452de88~40x40.awebp"
+    :src="userStore.userInfo.profile.image"
     class="w-[32px] h-[32px] rounded-full mx-[10px]"
   />
   <el-dropdown class="flex items-center mr-4">
     <span class="el-dropdown-link">
-      admin
+      {{ userStore.userInfo.username }}
       <el-icon class="el-icon--right">
         <arrow-down />
       </el-icon>
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>退出登录</el-dropdown-item>
+        <el-dropdown-item @click="loginOut">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
