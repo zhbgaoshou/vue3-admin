@@ -9,29 +9,19 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <div class="flex my-[10px]">
+  <div class="flex flex-1 my-[10px]">
     <!-- 左边头像 -->
-
-    <img
-      :src="userStore.userInfo.profile.image"
-      class="w-[50px] h-[50px] mx-[5px]"
-      :class="{ 'order-1': role === 'user' }"
-    />
+    <img :src="userStore.userInfo.profile.image" class="h-[50px] w-[50px] mx-[5px] rounded-full"
+      :class="{ 'order-1': role === 'user' }" />
 
     <!-- 右边 -->
-    <div
-      class="flex-1 mx-[5px]"
-      :class="{ 'flex items-end flex-col': role === 'user' }"
-    >
+    <div class="mx-[5px] w-0 flex-1" :class="{ 'flex items-end flex-col': role === 'user' }">
       <!-- 顶部时间 -->
-      <div
-        class="text-slate-400 text-sm pb-[5px]"
-        :class="{ 'text-right': role === 'user' }"
-      >
+      <div class="text-slate-400 text-sm pb-[5px]" :class="{ 'text-right': role === 'user' }">
         {{ dateTime || "暂无时间" }}
       </div>
       <!-- 消息 -->
-      <div class="text-slate-800" :class="{ 'w-max': role === 'user' }">
+      <div class="text-slate-800 max-w-[85%]" :class="{ 'w-max': role === 'user' }">
         <MdPreview :modelValue="content" class="!bg-transparent" />
       </div>
     </div>

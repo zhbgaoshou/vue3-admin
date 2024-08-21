@@ -1,11 +1,8 @@
+import type { Iresponse } from '../pulicType'
+
 export interface userParams {
   username: string;
   password: string;
-}
-
-interface Iresponse {
-  code: number;
-  msg: string;
 }
 
 interface loginRes extends Iresponse {

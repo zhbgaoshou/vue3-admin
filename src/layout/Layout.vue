@@ -50,10 +50,11 @@ const refresh = ref<boolean>(true);
         </div>
       </div>
       <!-- main -->
-      <div class="flex-1 p-[10px] h-0">
-        <router-view v-if="refresh" />
+      <div class="flex-1 h-0">
+        <router-view  v-if="refresh" />
       </div>
     </div>
+    
   </div>
 </template>
 

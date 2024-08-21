@@ -7,6 +7,7 @@ import type { chatParams } from "@/api/chat/type";
 import { ref, onUpdated } from "vue";
 import { ElMessage } from "element-plus";
 import useChatStore from "@/store/modules/chat";
+import Room from "./component/Room.vue";
 
 const chatStore = useChatStore();
 let text = ref("");
@@ -70,25 +71,25 @@ function file(file: FileList) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full">
-    <!-- 聊天框 -->
-    <div class="flex-1 overflow-auto scrollbar-hide" ref="tp">
-      <Message
-        role="assistant"
-        :content="chat3Default.content"
-        :dateTime="chat3Default.dateTime"
-      />
+  <div class="h-full flex">
+    <div class="flex flex-1 flex-col h-full relative p-[5px]">
+      <!-- 聊天框 -->
+      <div class="flex-1 overflow-auto scrollbar-hide" ref="tp">
+        <Message role="assistant" :content="chat3Default.content" :dateTime="chat3Default.dateTime" />
 
-      <div v-for="(item, index) in chatStore.messageList" :key="index">
-        <Message :role="item.role" :content="item.content" />
+        <div v-for="(item, index) in chatStore.messageList" :key="index">
+          <Message :role="item.role" :content="item.content" />
+        </div>
+
+        <!-- 正在生成的消息 -->
+        <Message role="assistant" :content="text" v-show="text" />
       </div>
-
-      <!-- 正在生成的消息 -->
-      <Message role="assistant" :content="text" v-show="text" />
+      <!-- 输入框 -->
+      <div class="h-[50px]">
+        <Input @send="send" @file="file" />
+      </div>
     </div>
-    <!-- 输入框 -->
-    <div class="h-[50px]">
-      <Input @send="send" @file="file" />
-    </div>
+    <!-- 会话列表 -->
+    <Room />
   </div>
 </template>
