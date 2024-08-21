@@ -19,19 +19,19 @@ const userStore = useUserStore();
     />
 
     <!-- 右边 -->
-    <div class="flex-1" :class="{ 'flex items-end flex-col': role === 'user' }">
+    <div
+      class="flex-1 mx-[5px]"
+      :class="{ 'flex items-end flex-col': role === 'user' }"
+    >
       <!-- 顶部时间 -->
       <div
         class="text-slate-400 text-sm pb-[5px]"
         :class="{ 'text-right': role === 'user' }"
       >
-        {{ dateTime || new Date().toLocaleString() }}
+        {{ dateTime || "暂无时间" }}
       </div>
       <!-- 消息 -->
-      <div
-        class="rounded-md text-slate-800 bg-sky-100"
-        :class="{ 'w-max': role === 'user' }"
-      >
+      <div class="text-slate-800" :class="{ 'w-max': role === 'user' }">
         <MdPreview :modelValue="content" class="!bg-transparent" />
       </div>
     </div>
@@ -40,6 +40,6 @@ const userStore = useUserStore();
 
 <style scoped>
 :deep(.md-editor-preview-wrapper) {
-  padding: 0 10px;
+  padding: 0;
 }
 </style>
