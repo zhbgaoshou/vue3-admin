@@ -1,6 +1,7 @@
 import type { chatParams } from "./type";
 import useUserStore from "@/store/modules/user";
 import { defaultModel } from "@/config/chat";
+import request from "@/utils/request";
 
 export const chat3Api = (data: chatParams) => {
   const userStore = useUserStore();
@@ -10,3 +11,5 @@ export const chat3Api = (data: chatParams) => {
     body: JSON.stringify(data),
   });
 };
+
+export const messageApi = (user: number, room: number) => request.get<any, any>(`/chat/message/?user=${user}&room=${room}`)

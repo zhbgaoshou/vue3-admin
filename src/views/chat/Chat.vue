@@ -4,12 +4,21 @@ import Message from "./component/Message.vue";
 import { chat3Default } from "@/config/chat";
 import { chat3Api } from "@/api/chat/chat3";
 import type { chatParams } from "@/api/chat/type";
-import { ref, onUpdated } from "vue";
+import { ref,watch, } from "vue";
 import { ElMessage } from "element-plus";
 import useChatStore from "@/store/modules/chat";
+import useRoomStore from "@/store/modules/room";
+import useUserStore from "@/store/modules/user";
 import Room from "./component/Room.vue";
 
 const chatStore = useChatStore();
+const roomStore = useRoomStore()
+const userStote = useUserStore()
+
+async function getMessageList(){
+  await chatStore.fetchMessageList(userStote.user,roomStore.activeRoom.id as number)
+}
+
 let text = ref("");
 
 const tp = ref(null);
@@ -20,16 +29,17 @@ function scrollTop() {
     behavior: "smooth",
   });
 }
-onUpdated(() => {
-  scrollTop();
-});
+
 
 async function send(content: string) {
   if (content === "") return;
 
+
   const userMessage: chatParams = {
     content,
-    room: 1,
+    room:roomStore.activeRoom.id as number,
+    role:'user',
+    date_time:new Date().toLocaleString()
   };
 
   chatStore.addMessage(userMessage);
@@ -49,14 +59,17 @@ async function send(content: string) {
       const res = textDecoder.decode(value, { stream: true }); // 使用流解码
       if (res.endsWith("None")) {
         const aiData: chatParams = {
-          room: 1,
+          room: roomStore.activeRoom.id as number,
           content: text.value, // 最终生成的完整内容
+          role:'assistant',
+          date_time:new Date().toLocaleString()
         };
         chatStore.addMessage(aiData);
         text.value = "";
         break;
       } else {
         text.value += res;
+        scrollTop()
       }
     }
   } catch (error) {
@@ -68,6 +81,12 @@ async function send(content: string) {
 function file(file: FileList) {
   console.log(file[0]);
 }
+
+watch(()=>roomStore.activeRoom,()=>{
+  getMessageList()
+})
+
+
 </script>
 
 <template>
@@ -82,7 +101,7 @@ function file(file: FileList) {
         />
 
         <div v-for="(item, index) in chatStore.messageList" :key="index">
-          <Message :role="item.role" :content="item.content" />
+          <Message :role="item.role" :content="item.content" :dateTime="item.date_time" />
         </div>
 
         <!-- 正在生成的消息 -->
