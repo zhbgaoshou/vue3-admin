@@ -1,21 +1,15 @@
-import { ref } from "vue";
-
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { LoginApi, InfoApi } from "@/api/user";
 import type { userParams, userInfo } from "@/api/user/type";
 import { setToken, getToken } from "@/utils/local";
 
 const useUserStore = defineStore("user", () => {
-  const userInfo = ref<userInfo>({
-    username: "",
-    email: "",
-    date_joined: "",
-    profile: {
-      image: "",
-    },
-  } as userInfo);
+  const userInfo = ref<userInfo>({} as userInfo);
 
   const token = ref(getToken()?.access || "");
+
+  const user = computed(() => userInfo.value.id);
 
   async function fetchLogin(data: userParams) {
     const res = await LoginApi(data);
@@ -43,6 +37,7 @@ const useUserStore = defineStore("user", () => {
     userInfo,
     token,
     fetchInfo,
+    user,
   };
 });
 

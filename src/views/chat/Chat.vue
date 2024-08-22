@@ -28,8 +28,8 @@ async function send(content: string) {
   if (content === "") return;
 
   const userMessage: chatParams = {
-    role: "user",
     content,
+    room: 1,
   };
 
   chatStore.addMessage(userMessage);
@@ -49,7 +49,7 @@ async function send(content: string) {
       const res = textDecoder.decode(value, { stream: true }); // 使用流解码
       if (res.endsWith("None")) {
         const aiData: chatParams = {
-          role: "assistant",
+          room: 1,
           content: text.value, // 最终生成的完整内容
         };
         chatStore.addMessage(aiData);
@@ -75,7 +75,11 @@ function file(file: FileList) {
     <div class="flex flex-1 flex-col h-full relative p-[5px]">
       <!-- 聊天框 -->
       <div class="flex-1 overflow-auto scrollbar-hide" ref="tp">
-        <Message role="assistant" :content="chat3Default.content" :dateTime="chat3Default.dateTime" />
+        <Message
+          role="assistant"
+          :content="chat3Default.content"
+          :dateTime="chat3Default.dateTime"
+        />
 
         <div v-for="(item, index) in chatStore.messageList" :key="index">
           <Message :role="item.role" :content="item.content" />

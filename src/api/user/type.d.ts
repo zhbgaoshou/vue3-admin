@@ -1,15 +1,19 @@
-import type { Iresponse } from '../pulicType'
+import type { Iresponse } from "../publicType";
 
 export interface userParams {
   username: string;
   password: string;
 }
 
-interface loginRes extends Iresponse {
-  data: { access: string; refresh: string };
+export interface auth {
+  access: string;
+  refresh: string;
 }
 
-interface userInfo {
+export interface loginRes extends Iresponse<auth> {}
+
+export interface userInfo {
+  id: number;
   username: string;
   email: string;
   date_joined: string;
@@ -18,6 +22,4 @@ interface userInfo {
   };
 }
 
-interface userInfoRes extends Iresponse {
-  data: userInfo;
-}
+interface userInfoRes extends Iresponse<userInfo> {}

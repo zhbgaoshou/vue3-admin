@@ -32,6 +32,9 @@ request.interceptors.response.use(
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
     nprogress.done();
+    if (response.status === 204) {
+      return response;
+    }
     return response.data;
   },
   function (error) {

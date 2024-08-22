@@ -1,16 +1,15 @@
-import type { Iresponse } from "../pulicType";
+import type { IListResponse, Iresponse } from "../publicType";
 
 export interface room {
-    "id": number,
-    "name": string,
-    "user": number
+  id?: number;
+  name: string;
+  user: number;
+  active?: boolean;
 }
 
-export interface roomListRes extends Iresponse {
-    data: {
-        "count": number,
-        "next": null | string,
-        "previous": null | string,
-        "results": room[]
-    }
+export interface editRoomParams {
+  name: string;
 }
+
+export interface roomListRes extends IListResponse<room[]> {}
+export interface addRoomRes extends Iresponse<room> {}
