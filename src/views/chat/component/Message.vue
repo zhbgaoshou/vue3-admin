@@ -3,7 +3,7 @@ import useUserStore from "@/store/modules/user";
 import type { MessageProps } from "./type";
 import { MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/preview.css";
-import { chat3Default } from "@/config/chat";
+import { defaultTempImage } from "@/config/chat";
 
 defineProps<MessageProps>();
 const userStore = useUserStore();
@@ -15,10 +15,10 @@ const userStore = useUserStore();
     <img
       :src="
         role === 'assistant'
-          ? chat3Default.image
+          ? defaultTempImage
           : userStore.userInfo.profile.image
       "
-      class="h-[50px] w-[50px] mx-[5px] rounded-full"
+      class="h-[40px] w-[40px] mx-[5px] rounded-full hidden  md:block md:mx-[10px] object-cover"
       :class="{ 'order-1': role === 'user' }"
     />
 

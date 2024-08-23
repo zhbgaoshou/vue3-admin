@@ -129,7 +129,7 @@ getRoomList();
 
 <template>
   <div
-    class="basis-[240px] p-[10px] bg-gray-200 bg-opacity-50 h-full flex flex-col rounded-tl-lg rounded-bl-lg"
+    class="basis-[180px] p-[10px] bg-white border-[1px] h-full flex flex-col rounded-tl-lg rounded-bl-lg"
   >
     <div class="flex justify-between items-center">
       <h2 class="py-[10px] text-center text-slate-500 font-semibold">

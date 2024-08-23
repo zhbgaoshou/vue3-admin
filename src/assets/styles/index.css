@@ -7,3 +7,18 @@ html,
 body {
   height: 100%;
 }
+
+/* 隐藏滚动条的轨道 */
+*::-webkit-scrollbar-track {
+  background: transparent; /* 隐藏轨道背景 */
+}
+
+/* 自定义滚动条的宽度和颜色 */
+*::-webkit-scrollbar {
+  width: 5px; /* 滚动条宽度 */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(204, 203, 203, 0.5); /* 滚动条颜色 */
+  border-radius: 10px; /* 圆角 */
+}

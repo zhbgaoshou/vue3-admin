@@ -19,7 +19,7 @@ const refresh = ref<boolean>(true);
     <!-- 侧边栏(左边) -->
     <div
       :class="{ coll: menuStore.isColl }"
-      class="w-[150px] h-full bg-[#fafafa] flex-col transition-all duration-200 overflow-hidden hidden md:flex"
+      class="w-[150px] h-full bg-white border-[1px] flex-col transition-all duration-200 overflow-hidden hidden md:flex"
     >
       <Logo />
       <el-scrollbar class="flex-1">
@@ -61,6 +61,6 @@ const refresh = ref<boolean>(true);
 }
 
 .el-menu {
-  --el-menu-bg-color: #fafafa;
+  --el-menu-bg-color: white;
 }
 </style>
