@@ -5,6 +5,7 @@ export interface room {
   name: string;
   user: number;
   active?: boolean;
+  checked?: boolean;
 }
 
 export interface editRoomParams {

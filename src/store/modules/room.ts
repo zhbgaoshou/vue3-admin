@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { roomListApi, addRoomApi } from "@/api/room";
+import { roomListApi, addRoomApi, updateActiveApi } from "@/api/room";
 import type { room } from "@/api/room/type";
 import { ElMessage } from "element-plus";
 
@@ -26,8 +26,17 @@ const useRoomStore = defineStore("room", () => {
     }
   }
 
-  const activeRoom = computed(() =>
-    roomList.value.filter((item) => item.active)[0]
+  async function fetchUpdateActive(rooms: room[]) {
+    const res = await updateActiveApi(rooms);
+    if (res.code === 200) {
+      return res;
+    } else {
+      return Promise.reject(new Error("fail"));
+    }
+  }
+
+  const activeRoom = computed(
+    () => roomList.value.filter((item) => item.active)[0]
   );
 
   return {
@@ -35,6 +44,7 @@ const useRoomStore = defineStore("room", () => {
     fetchRoomList,
     fetchAddRoom,
     activeRoom,
+    fetchUpdateActive,
   };
 });
 

@@ -12,4 +12,5 @@ export const chat3Api = (data: chatParams) => {
   });
 };
 
-export const messageApi = (user: number, room: number) => request.get<any, any>(`/chat/message/?user=${user}&room=${room}`)
+export const messageApi = (user: number, room: number) =>
+  request.get<any, any>(`/chat/message/?user=${user}&room=${room}`);

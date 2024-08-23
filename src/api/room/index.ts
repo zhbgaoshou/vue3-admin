@@ -31,3 +31,12 @@ export function editRoomApi(id: number, data: editRoomParams) {
     data,
   });
 }
+
+// 修改默认会话
+export function updateActiveApi(rooms: room[]) {
+  return request<any, roomListRes>({
+    url: `/chat/room/update_active/`,
+    method: "PATCH",
+    data: rooms,
+  });
+}

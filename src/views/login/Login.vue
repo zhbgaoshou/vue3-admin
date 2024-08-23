@@ -54,8 +54,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <template>
-  <div class="w-full h-[100vh] flex justify-center items-center">
-    <el-card class="w-[500px]">
+  <div class="w-full h-[100%] flex justify-center items-center">
+    <el-card class="w-[90%] max-w-[500px]">
       <template #header>
         <div class="card-header">
           <span>LOGIN</span>

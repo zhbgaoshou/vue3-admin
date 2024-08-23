@@ -5,28 +5,22 @@ import SuccessIcon from "@/assets/svgs/success.svg";
 import { ref, watch, nextTick } from "vue";
 
 const props = defineProps(["room", "isEdit", "isAdd", "isActive"]);
-const emit = defineEmits(["del", "edit", "openEdit", "add"]);
+const emit = defineEmits(["del", "edit", "openEdit", "add", "toggle-room"]);
 
 const inValue = ref(props.room.name);
 const inputDOM = ref({} as HTMLInputElement);
 
+// 当 isEdit 或 isAdd 改变时，自动聚焦输入框
 watch(
-  () => props.isEdit,
+  [() => props.isEdit, () => props.isAdd],
   () => {
     nextTick(() => {
-      inputDOM.value.focus();
-    });
-  }
-);
-
-watch(
-  () => props.isAdd,
-  () => {
-    nextTick(() => {
-      inputDOM.value.focus();
+      inputDOM.value?.focus();
     });
   },
-  { immediate: true }
+  {
+    immediate: true,
+  }
 );
 
 function addOrEdit() {
@@ -41,35 +35,42 @@ function addOrEdit() {
 
 <template>
   <div
-    class="w-full relative bg-slate-100 h-[50px] rounded-lg p-5px flex items-center justify-between my-[5px]"
+    class="w-full relative bg-white h-[50px] rounded-lg p-5px flex items-center justify-between my-[5px]"
   >
-    <div class="absolute top-[-2px]">
-      <el-icon v-if="isActive" size="18">
-        <CircleCheck class="text-lime-500" />
-      </el-icon>
+    <!-- 文本信息 -->
+    <div
+      @click="emit('toggle-room', room)"
+      class="h-full flex-1 items-center flex border-r-[1px] border-slate-200"
+    >
+      <div class="absolute top-[-2px]">
+        <el-icon v-if="isActive" size="18">
+          <CircleCheck class="text-lime-500" />
+        </el-icon>
+      </div>
+      <p v-show="!isEdit" class="pl-[10px] flex-1 basis-0 text-slate-500">
+        {{ room.name }}
+      </p>
+      <el-input
+        ref="inputDOM"
+        v-show="isEdit || isAdd"
+        v-model="inValue"
+        class="ml-[5px]"
+      />
     </div>
-    <p v-show="!isEdit" class="pl-[10px] flex-1 basis-0 text-slate-500">
-      {{ room.name }}
-    </p>
-    <el-input
-      ref="inputDOM"
-      v-show="isEdit"
-      v-model="inValue"
-      class="ml-[5px]"
-    />
+    <!-- 按钮组 -->
     <div class="flex">
       <DeleteIcon
-        v-show="!isEdit"
-        class="stroke-slate-400 cursor-pointer"
+        v-show="!isEdit && !isAdd"
+        class="stroke-slate-400 cursor-pointer ml-[8px]"
         @click="$emit('del', room)"
       />
       <EditIcon
-        v-show="!isEdit"
+        v-show="!isEdit && !isAdd"
         class="stroke-slate-400 mx-[8px] cursor-pointer"
-        @click="$emit('openEdit')"
+        @click="$emit('openEdit', room)"
       />
       <SuccessIcon
-        v-show="isEdit"
+        v-show="isEdit || isAdd"
         class="stroke-slate-400 mx-[8px] cursor-pointer"
         @click="addOrEdit"
       />

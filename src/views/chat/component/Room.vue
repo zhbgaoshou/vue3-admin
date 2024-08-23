@@ -10,8 +10,11 @@ import { ref, reactive } from "vue";
 const roomStore = useRoomStore();
 const { user } = useUserStore();
 
-let isEdit = ref(false);
 let isAdd = ref(false);
+const addRoomData = reactive({
+  name: "",
+  user: 0,
+} as room);
 
 async function getRoomList() {
   try {
@@ -29,19 +32,24 @@ async function getRoomList() {
 // 删除会话的处理函数
 async function delRoom(room: room) {
   if (roomStore.roomList.length <= 1) {
-    // 确保至少保留一个会话
-    ElNotification({
+    return ElNotification({
       message: "最少留一个会话",
       type: "error",
     });
-    return;
+  }
+
+  if (room.active) {
+    return ElNotification({
+      message: "默认会话不能删除",
+      type: "error",
+    });
   }
 
   try {
     // 确认删除对话框
     await ElMessageBox.confirm(`确定删除 ${room.name} ?`, "温馨提示", {
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
       type: "warning",
     });
     const res = await deleteRoomApi(room.id as number);
@@ -51,17 +59,17 @@ async function delRoom(room: room) {
     } else {
       ElMessage.error("删除失败，稍后重试");
     }
-  } catch (error) {
-    ElMessage.error("操作取消或删除失败");
-    console.error("删除会话时出错:", error); // 更加详细的错误日志
-  }
+  } catch (error) {}
 }
 
-// 编辑会话的处理函数
+function openEdit(room: room) {
+  room.checked = true;
+}
+// 编辑会话的处理函数(点击勾选按钮处理)
 async function editRoom(room: room, newName: string) {
   if (!newName || room.name === newName) {
-    // 如果没有修改名称或新名称为空，直接退出编辑模式
-    isEdit.value = false;
+    // isEdit.value = false;
+    room.checked = false;
     return;
   }
 
@@ -77,14 +85,10 @@ async function editRoom(room: room, newName: string) {
     ElMessage.error("修改失败");
     console.error("修改会话时出错:", error); // 更加详细的错误日志
   } finally {
-    isEdit.value = false; // 无论成功与否，都退出编辑模式
+    // isEdit.value = false; // 无论成功与否，都退出编辑模式
+    room.checked = false;
   }
 }
-
-const addRoomData = reactive({
-  name: "",
-  user: 0,
-} as room);
 
 async function addRoom(inValue: any) {
   if (inValue.value === "") {
@@ -96,6 +100,7 @@ async function addRoom(inValue: any) {
     const res = await addRoomApi({ user, name: inValue.value });
     if (res.code < 400) {
       getRoomList();
+      toggleRoom(res.data);
       ElMessage.success("添加成功");
     }
   } catch (error) {
@@ -106,11 +111,26 @@ async function addRoom(inValue: any) {
   }
 }
 
+async function toggleRoom(room: room) {
+  const activeRoom = roomStore.activeRoom;
+  if (activeRoom.id === room.id) {
+    return;
+  }
+  activeRoom.active = false;
+  room.active = true;
+
+  const rooms = [activeRoom, room];
+  await roomStore.fetchUpdateActive(rooms);
+  getRoomList();
+}
+
 getRoomList();
 </script>
 
 <template>
-  <div class="basis-[240px] p-[5px] border-l-2 h-full flex flex-col">
+  <div
+    class="basis-[240px] p-[10px] bg-gray-200 bg-opacity-50 h-full flex flex-col rounded-tl-lg rounded-bl-lg"
+  >
     <div class="flex justify-between items-center">
       <h2 class="py-[10px] text-center text-slate-500 font-semibold">
         会话列表
@@ -124,25 +144,26 @@ getRoomList();
       />
     </div>
 
-    <div class="flex-1 h-0 overflow-auto">
-      <RoomCard
-        v-show="isAdd"
-        :room="addRoomData"
-        :isEdit="true"
-        :isAdd="isAdd"
-        @add="addRoom"
-      />
+    <div class="flex-1">
+      <el-scrollbar>
+        <RoomCard
+          v-show="isAdd"
+          :room="addRoomData"
+          :isEdit="true"
+          :isAdd="isAdd"
+          @add="addRoom" />
 
-      <RoomCard
-        v-for="room in roomStore.roomList"
-        :key="room.id"
-        :room="room"
-        :isEdit="isEdit"
-        :isActive="room.active"
-        @del="delRoom"
-        @edit="editRoom"
-        @open-edit="isEdit = true"
-      />
+        <RoomCard
+          v-for="room in roomStore.roomList"
+          :key="room.id"
+          :room="room"
+          :isEdit="room.checked"
+          :isActive="room.active"
+          @del="delRoom"
+          @edit="editRoom"
+          @open-edit="openEdit"
+          @toggle-room="toggleRoom"
+      /></el-scrollbar>
     </div>
   </div>
 </template>

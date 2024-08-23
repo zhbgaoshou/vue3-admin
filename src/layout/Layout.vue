@@ -15,11 +15,11 @@ const refresh = ref<boolean>(true);
 </script>
 
 <template>
-  <div class="flex">
+  <div class="flex h-full">
     <!-- 侧边栏(左边) -->
     <div
       :class="{ coll: menuStore.isColl }"
-      class="w-[200px] h-[100vh] bg-slate-500 flex flex-col transition-all duration-700"
+      class="w-[150px] h-full bg-[#fafafa] flex-col transition-all duration-200 overflow-hidden hidden md:flex"
     >
       <Logo />
       <el-scrollbar class="flex-1">
@@ -27,9 +27,7 @@ const refresh = ref<boolean>(true);
           :collapse="menuStore.isColl"
           style="border: none"
           :default-active="$route.path"
-          active-text-color="#ffd04b"
-          background-color="bg-slate-500"
-          text-color="#fff"
+          :collapse-transition="false"
           router
         >
           <Menu :menuList="menuStore.menuList"></Menu>
@@ -37,7 +35,7 @@ const refresh = ref<boolean>(true);
       </el-scrollbar>
     </div>
     <!-- 右边 -->
-    <div class="h-[100vh] flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col h-full">
       <!-- 顶部 -->
       <div class="h-[50px] flex justify-between items-center shadow-sm">
         <!-- 顶部左边 -->
@@ -51,15 +49,18 @@ const refresh = ref<boolean>(true);
       </div>
       <!-- main -->
       <div class="flex-1 h-0">
-        <router-view  v-if="refresh" />
+        <router-view v-if="refresh" />
       </div>
     </div>
-    
   </div>
 </template>
 
-<style>
+<style scoped>
 .coll {
   width: 60px !important;
+}
+
+.el-menu {
+  --el-menu-bg-color: #fafafa;
 }
 </style>
