@@ -35,10 +35,7 @@ function loginOut() {
 </script>
 
 <template>
-  <el-button icon="Refresh" circle @click="onRefresh" />
-  <el-button icon="FullScreen" circle @click="onfullScreen" />
-  <el-button icon="Setting" circle />
-  <img
+    <img
     :src="userStore.userInfo.profile.image"
     class="w-[32px] h-[32px] rounded-full mx-[10px]"
   />
@@ -55,6 +52,10 @@ function loginOut() {
       </el-dropdown-menu>
     </template>
   </el-dropdown>
+  <el-button icon="Refresh" circle @click="onRefresh" />
+  <el-button icon="FullScreen" circle @click="onfullScreen" />
+  <el-button icon="Setting" circle />
+
 </template>
 
 <style scoped lang="scss"></style>

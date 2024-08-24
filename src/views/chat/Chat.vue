@@ -129,33 +129,21 @@ watch(
 
 <template>
   <div class="h-full flex grid-bg">
-    <div class="flex flex-1 flex-col h-full relative">
+    <!-- 聊天消息区域 -->
+    <div class="flex flex-1 flex-col">
       <!-- 聊天框 -->
-      <div
-        class="flex-1 scrollbar-hidden overflow-auto"
-        @scroll="chatScroll"
-        ref="tp"
-      >
-        <div
-          v-show="chatStore.messageList && chatStore.messageList.length >= 1"
-          v-for="(item, index) in chatStore.messageList"
-          :key="index"
-        >
-          <Message
-            :role="item.role"
-            :content="item.content"
-            :dateTime="item.date_time"
-          />
+      <div class="flex-1 scrollbar-hidden overflow-auto" @scroll="chatScroll" ref="tp">
+        <!-- 聊天记录不是空 -->
+        <div v-show="chatStore.messageList && chatStore.messageList.length >= 1"
+          v-for="(item, index) in chatStore.messageList" :key="index">
+          <Message :role="item.role" :content="item.content" :dateTime="item.date_time" />
         </div>
         <!-- 聊天列表为空 -->
-        <div
-          class="relative flex h-full w-full items-end justify-center"
-          v-show="chatStore.messageList && chatStore.messageList.length < 1"
-        >
+        <div class="relative flex h-full w-full items-end justify-center"
+          v-show="chatStore.messageList && chatStore.messageList.length < 1">
           <img :src="defaultTempImage" class="object-cover h-[80%]" />
           <div
-            class="absolute bg-white shadow-md border-[1px] text-sm top-[24%] left-[55%] w-[100px] p-[10px] rounded-t-[20px] rounded-r-[20px]"
-          >
+            class="absolute bg-white shadow-md border-[1px] text-sm top-[24%] left-[55%] w-[100px] p-[10px] rounded-t-[20px] rounded-r-[20px]">
             哦哈哟！有什么可以帮到你的吗?
           </div>
         </div>
@@ -165,17 +153,12 @@ watch(
       </div>
       <!-- 输入框 -->
       <div class="h-max">
-        <Input
-          :isGeneration="isGeneration"
-          @send="send"
-          @file="file"
-          @goto-bottom="scrollTop"
-          :is-goto-bottom="isUserScrolling"
-        />
+        <Input :isGeneration="isGeneration" @send="send" @file="file" @goto-bottom="scrollTop"
+          :is-goto-bottom="isUserScrolling" />
       </div>
     </div>
     <!-- 会话列表 -->
-    <Room class="hidden md:block" />
+    <Room class="hidden md:flex" />
   </div>
 </template>
 

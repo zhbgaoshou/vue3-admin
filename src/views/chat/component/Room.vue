@@ -59,7 +59,7 @@ async function delRoom(room: room) {
     } else {
       ElMessage.error("删除失败，稍后重试");
     }
-  } catch (error) {}
+  } catch (error) { }
 }
 
 function openEdit(room: room) {
@@ -128,38 +128,23 @@ getRoomList();
 </script>
 
 <template>
-  <div
-    class="basis-[180px] p-[10px] bg-white border-[1px] h-full flex flex-col rounded-tl-lg rounded-bl-lg"
-  >
-    <div class="flex justify-between items-center">
-      <h2 class="py-[10px] text-center text-slate-500 font-semibold">
+  <div class="w-max max-w-[150px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col">
+    <!-- 顶部 -->
+    <div class="flex px-[10px] justify-between items-center">
+      <h2 class="py-[5px] text-center text-slate-500 font-semibold">
         会话列表
       </h2>
       <el-icon size="22" class="antialiased" @click="isAdd = true">
         <component is="CirclePlus"></component>
       </el-icon>
     </div>
+    <!-- 会话列表 -->
 
-    <div class="flex-1">
-      <el-scrollbar>
-        <RoomCard
-          v-show="isAdd"
-          :room="addRoomData"
-          :isEdit="true"
-          :isAdd="isAdd"
-          @add="addRoom" />
+    <div class="flex-1 overflow-auto">
+      <RoomCard v-show="isAdd" :room="addRoomData" :isEdit="true" :isAdd="isAdd" @add="addRoom" />
 
-        <RoomCard
-          v-for="room in roomStore.roomList"
-          :key="room.id"
-          :room="room"
-          :isEdit="room.checked"
-          :isActive="room.active"
-          @del="delRoom"
-          @edit="editRoom"
-          @open-edit="openEdit"
-          @toggle-room="toggleRoom"
-      /></el-scrollbar>
+      <RoomCard v-for="room in roomStore.roomList" :key="room.id" :room="room" :isEdit="room.checked"
+        :isActive="room.active" @del="delRoom" @edit="editRoom" @open-edit="openEdit" @toggle-room="toggleRoom" />
     </div>
   </div>
 </template>

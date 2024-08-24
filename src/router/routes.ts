@@ -68,7 +68,7 @@ export const menuRoutes: RouteRecordRaw[] = [
         component: () => import("@views/chat/Chat.vue"),
         name: "chat",
         meta: {
-          title: "chatGPT",
+          title: "聊天",
           icon: "ChatRound",
         },
       },

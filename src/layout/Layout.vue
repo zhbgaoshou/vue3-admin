@@ -15,36 +15,24 @@ const refresh = ref<boolean>(true);
 </script>
 
 <template>
+  <!-- 宽高都继承#app -->
   <div class="flex h-full">
-    <!-- 侧边栏(左边) -->
-    <div
-      :class="{ coll: menuStore.isColl }"
-      class="w-[150px] h-full bg-white border-[1px] flex-col transition-all duration-200 overflow-hidden hidden md:flex"
-    >
-      <Logo />
-      <el-scrollbar class="flex-1">
-        <el-menu
-          :collapse="menuStore.isColl"
-          style="border: none"
-          :default-active="$route.path"
-          :collapse-transition="false"
-          router
-        >
-          <Menu :menuList="menuStore.menuList"></Menu>
-        </el-menu>
-      </el-scrollbar>
-    </div>
     <!-- 右边 -->
-    <div class="flex-1 flex flex-col h-full">
+    <div class="flex-1 flex flex-col  bg-white">
       <!-- 顶部 -->
-      <div class="h-[50px] flex justify-between items-center shadow-sm">
-        <!-- 顶部左边 -->
-        <div class="flex">
-          <Breadcrumb />
+      <div class="h-[50px] flex justify-between items-center border-b-[1px] shadow-sm">
+        <!-- 顶部左边边 -->
+        <div>
+          <!-- 水平菜单 -->
+          <el-menu mode="horizontal" style="border: none;height: 50px" :default-active="$route.path"
+            :collapse-transition="false" router>
+            <Menu :menuList="menuStore.menuList"></Menu>
+          </el-menu>
         </div>
         <!-- 顶部右边 -->
-        <div class="flex">
+        <div class="flex items-center">
           <Setting v-model:refresh="refresh" />
+          <Breadcrumb />
         </div>
       </div>
       <!-- main -->

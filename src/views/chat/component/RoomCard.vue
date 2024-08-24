@@ -56,7 +56,7 @@ watch(
 
 <template>
   <div
-    class="w-full relative bg-white shadow-sm border-[1px] h-[40px] rounded-lg p-5px flex items-center justify-between my-[5px] hover:border-sky-500">
+    class="mx-[10px] relative bg-white shadow-sm border-[1px] h-[40px] rounded-lg p-5px flex items-center justify-between my-[5px] hover:border-sky-500">
     <!-- 文本信息 -->
     <div @click="emit('toggle-room', room)"
       class="h-full flex-1 items-center flex border-r-[1px] border-slate-200 cursor-pointer">
@@ -65,10 +65,10 @@ watch(
           <CircleCheck class="text-lime-500" />
         </el-icon>
       </div>
-      <p v-show="!isEdit" class="pl-[10px] flex-1 basis-0 text-slate-500">
+      <p v-show="!isEdit" class="px-[10px] flex-1 basis-0 text-sm text-slate-500">
         {{ room.name }}
       </p>
-      <el-input ref="inputDOM" v-show="isEdit || isAdd" v-model="inValue" class="ml-[5px]" />
+      <el-input ref="inputDOM" v-show="isEdit || isAdd" v-model="inValue" />
     </div>
     <!-- 按钮组 -->
     <div class="flex">
@@ -78,21 +78,6 @@ watch(
     </div>
   </div>
 </template>
-<!-- <DeleteIcon
-        v-show="!isEdit && !isAdd"
-        class="stroke-slate-400 cursor-pointer ml-[8px]"
-        @click="$emit('del', room)"
-      />
-      <EditIcon
-        v-show="!isEdit && !isAdd"
-        class="stroke-slate-400 mx-[8px] cursor-pointer"
-        @click="$emit('openEdit', room)"
-      />
-      <SuccessIcon
-        v-show="isEdit || isAdd"
-        class="stroke-slate-400 mx-[8px] cursor-pointer"
-        @click="addOrEdit"
-      /> -->
 
 <style scoped>
 :deep(.el-input__wrapper) {
