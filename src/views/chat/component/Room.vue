@@ -99,8 +99,8 @@ async function addRoom(inValue: any) {
   try {
     const res = await addRoomApi({ user, name: inValue.value });
     if (res.code < 400) {
-      getRoomList();
-      toggleRoom(res.data);
+      await getRoomList();
+      await toggleRoom(res.data);
       ElMessage.success("添加成功");
     }
   } catch (error) {
@@ -135,13 +135,9 @@ getRoomList();
       <h2 class="py-[10px] text-center text-slate-500 font-semibold">
         会话列表
       </h2>
-      <el-button
-        class="mx-[10px]"
-        icon="Plus"
-        circle
-        size="small"
-        @click="isAdd = true"
-      />
+      <el-icon size="22" class="antialiased" @click="isAdd = true">
+        <component is="CirclePlus"></component>
+      </el-icon>
     </div>
 
     <div class="flex-1">

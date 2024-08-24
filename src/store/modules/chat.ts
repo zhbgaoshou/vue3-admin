@@ -12,7 +12,7 @@ const useChatStore = defineStore("chat", () => {
   async function fetchMessageList(user: number, room: number) {
     const res = await messageApi(user, room);
     if (res.code === 200) {
-      messageList.value = res.data.results;
+      messageList.value = res.data;
       return res;
     } else {
       return Promise.reject(new Error("fail"));

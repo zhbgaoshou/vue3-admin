@@ -35,9 +35,9 @@ const useRoomStore = defineStore("room", () => {
     }
   }
 
-  const activeRoom = computed(
-    () => roomList.value.filter((item) => item.active)[0]
-  );
+  const activeRoom = computed(() => {
+    return roomList.value.filter((item) => item.active)[0];
+  });
 
   return {
     roomList,

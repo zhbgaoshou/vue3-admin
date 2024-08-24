@@ -8,6 +8,12 @@ body {
   height: 100%;
 }
 
+#app {
+  max-width: 1080px;
+  margin: auto;
+  overflow: hidden;
+}
+
 /* 隐藏滚动条的轨道 */
 *::-webkit-scrollbar-track {
   background: transparent; /* 隐藏轨道背景 */
