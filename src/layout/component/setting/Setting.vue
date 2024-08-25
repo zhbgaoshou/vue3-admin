@@ -3,19 +3,31 @@ import { beforeLoginOut } from "@/utils/local";
 import { useRouter, useRoute } from "vue-router";
 import useUserStore from "@/store/modules/user";
 import ToggleTheme from "./component/ToggleTheme.vue";
+import { ref } from 'vue'
+import Room from "@/views/chat/component/Room.vue";
+import { ElMessageBox } from 'element-plus'
 
 const $router = useRouter();
 const $route = useRoute();
 const userStore = useUserStore();
 
-function loginOut() {
-  beforeLoginOut();
-  $router.push({
-    path: "/login",
-    query: {
-      re: $route.path,
-    },
-  });
+async function loginOut() {
+  try {
+    // 确认删除对话框
+    await ElMessageBox.confirm(`确定退出登录吗 ?`, "温馨提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "error",
+    });
+    beforeLoginOut();
+    $router.push({
+      path: "/login",
+      query: {
+        re: $route.path,
+      },
+    });
+  } catch (error) { }
+
 }
 
 function widthFull() {
@@ -34,6 +46,16 @@ function toggleTheme(isDark: boolean) {
     document.documentElement.classList.remove("dark");
   }
 }
+
+let openDrawer = ref(false)
+
+function openRoom() {
+  openDrawer.value = !openDrawer.value
+}
+
+defineExpose({
+  loginOut
+})
 </script>
 
 <template>
@@ -49,28 +71,28 @@ function toggleTheme(isDark: boolean) {
       <ToggleTheme @toggle="toggleTheme" />
     </div>
     <!-- 头像 -->
-    <img
-      :src="userStore.userInfo.profile.image"
-      class="w-[32px] h-[32px] rounded-full object-cover border-2 border-sky-200"
-    />
+    <img :src="userStore.userInfo.profile.image"
+      class="w-[32px] h-[32px] rounded-full object-cover border-2 border-sky-200" />
     <!-- 名字 -->
-    <span class="text-sm text-slate-500 mx-[3px]">
+    <span class="text-sm text-slate-500 mx-[3px] hidden md:block">
       {{ userStore.userInfo.username }}
     </span>
     <!-- 退出登录确认 -->
-    <el-popconfirm
-      :hide-after="50"
-      title="退出登录?"
-      confirm-button-text="是的"
-      cancel-button-text="不不不"
-      @confirm="loginOut"
-    >
-      <template #reference>
-        <el-icon size="24" class="icon-style rounded-full">
-          <component is="Right" class="p-[3px]"></component>
-        </el-icon>
-      </template>
-    </el-popconfirm>
+    <div class="hidden md:flex items-center" @click="loginOut">
+      <el-icon size="24" class="icon-style rounded-full">
+        <component is="Right" class="p-[3px]"></component>
+      </el-icon>
+    </div>
+
+    <div class="md:hidden flex items-center mx-[10px]" @click="openRoom">
+      <el-icon size="18">
+        <component is="Fold"></component>
+      </el-icon>
+    </div>
+    <!-- 小屏幕显示 -->
+    <el-drawer :with-header="false" v-model="openDrawer" title="" direction="rtl" size="max-content">
+      <Room class="border-none" />
+    </el-drawer>
   </div>
 </template>
 

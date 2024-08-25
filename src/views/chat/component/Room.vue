@@ -129,7 +129,7 @@ getRoomList();
 
 <template>
   <div
-    class="w-max max-w-[150px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col"
+    class="w-max max-w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col"
   >
     <!-- 顶部 -->
     <div class="flex px-[10px] justify-between items-center">

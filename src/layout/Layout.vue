@@ -9,51 +9,51 @@ import { ref } from "vue";
 
 const menuStore = useMenuStore();
 const $route = useRoute();
-
-let menuDOM = ref({} as HTMLDivElement);
+let openDrawer = ref(false)
 
 function showMenu() {
-  menuDOM.value.classList.contains("scale-0")
-    ? menuDOM.value.classList.remove("scale-0")
-    : menuDOM.value.classList.add("scale-0");
+  openDrawer.value = !openDrawer.value
+}
+
+const setting = ref({} as any)
+
+function logOut() {
+  setting.value.loginOut()
 }
 </script>
+
 
 <template>
   <!-- 宽高都继承#app -->
   <div class="flex h-full">
     <!-- 菜单 -->
-    <div
-      ref="menuDOM"
-      class="origin-top w-[60px] border-r-[1px] bg-white flex-col h-full z-10 fixed scale-0 transition-all duration-100 flex md:static md:scale-100"
-    >
-      <div
-        class="md:hidden flex justify-center items-center h-[50px]"
-        @click="showMenu"
-      >
-        <el-icon size="24">
-          <component is="Close"></component>
-        </el-icon>
-      </div>
+    <div class="w-[60px] border-r-[1px] bg-white  hidden md:static md:block">
       <Logo />
       <el-scrollbar>
-        <el-menu
-          :collapse="true"
-          style="border: none; width: 100%"
-          :default-active="$route.path"
-          :collapse-transition="false"
-          router
-        >
+        <el-menu :collapse="true" style="border: none; width: 100%" :default-active="$route.path"
+          :collapse-transition="false" router>
           <Menu :menuList="menuStore.menuList"></Menu>
         </el-menu>
       </el-scrollbar>
     </div>
+    <!-- 小屏幕显示 -->
+    <el-drawer v-model="openDrawer" :with-header="false" title="导航" direction="ltr" size="max-content">
+      <div class="flex flex-col">
+        <div class="w-max bg-white flex-col h-full">
+          <el-scrollbar>
+            <el-menu style="border: none; width: 100%" :default-active="$route.path" :collapse-transition="false"
+              router>
+              <Menu :menuList="menuStore.menuList"></Menu>
+            </el-menu>
+          </el-scrollbar>
+        </div>
+        <el-button round @click="logOut">退出登录</el-button>
+      </div>
+    </el-drawer>
     <!-- 右边 -->
     <div class="flex-1 flex flex-col bg-white">
       <!-- 顶部 -->
-      <div
-        class="h-[50px] flex justify-between items-center border-b-[1px] shadow-sm"
-      >
+      <div class="h-[50px] flex justify-between items-center border-b-[1px] shadow-sm">
         <!-- 顶部左边 -->
         <div class="pl-[10px]">
           <!-- md宽度下显示，其余情况隐藏 -->
@@ -64,7 +64,7 @@ function showMenu() {
           </div>
         </div>
         <!-- 顶部右边 -->
-        <Setting />
+        <Setting ref="setting" />
       </div>
       <!-- main -->
       <div class="flex-1 h-0">
@@ -77,5 +77,9 @@ function showMenu() {
 <style scoped>
 .el-menu {
   --el-menu-bg-color: white;
+}
+
+:deep(.el-drawer) {
+  --el-drawer-padding-primary: 10px
 }
 </style>

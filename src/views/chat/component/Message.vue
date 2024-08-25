@@ -10,7 +10,7 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <div class="justify-between flex" :class="{ 'mt-[10px]': role === 'user' }">
+  <div class="justify-between flex" :class="{ 'mb-[10px]': role === 'assistant' }">
     <!-- 左边头像 -->
     <div class="w-0 flex justify-center md:w-[50px]">
       <img
