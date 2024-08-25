@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .icon-style {
+    @apply mx-[2px] rounded-[10px] bg-white cursor-pointer hover:shadow-md border-[1px];
+  }
+}
+
+:root {
+  --w: 1080px;
+}
+
 #app,
 html,
 body {
@@ -9,7 +19,8 @@ body {
 }
 
 #app {
-  max-width: 1080px;
+  transition: all 0.5s;
+  max-width: var(--w);
   margin: auto;
   overflow: hidden;
 }

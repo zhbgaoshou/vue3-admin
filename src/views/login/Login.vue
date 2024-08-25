@@ -26,7 +26,7 @@ const rules = reactive<FormRules<typeof ruleForm>>({
 
 const ruleForm = reactive({
   password: "123456",
-  username: "XiaoYan",
+  username: "芭德尔",
 });
 
 let isLoading = ref(false);

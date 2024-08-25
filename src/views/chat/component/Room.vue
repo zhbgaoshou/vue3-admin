@@ -21,7 +21,7 @@ async function getRoomList() {
     const exRoom = await roomStore.fetchRoomList(user);
     if (!exRoom || exRoom.length === 0) {
       // 如果会话列表为空，则创建一个新会话并重新获取列表
-      await roomStore.fetchAddRoom({ name: "新会话", user });
+      await roomStore.fetchAddRoom({ name: "新会话", user, active: true });
       await roomStore.fetchRoomList(user);
     }
   } catch (error) {
@@ -59,7 +59,7 @@ async function delRoom(room: room) {
     } else {
       ElMessage.error("删除失败，稍后重试");
     }
-  } catch (error) { }
+  } catch (error) {}
 }
 
 function openEdit(room: room) {
@@ -128,7 +128,9 @@ getRoomList();
 </script>
 
 <template>
-  <div class="w-max max-w-[150px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col">
+  <div
+    class="w-max max-w-[150px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col"
+  >
     <!-- 顶部 -->
     <div class="flex px-[10px] justify-between items-center">
       <h2 class="py-[5px] text-center text-slate-500 font-semibold">
@@ -141,10 +143,25 @@ getRoomList();
     <!-- 会话列表 -->
 
     <div class="flex-1 overflow-auto">
-      <RoomCard v-show="isAdd" :room="addRoomData" :isEdit="true" :isAdd="isAdd" @add="addRoom" />
+      <RoomCard
+        v-show="isAdd"
+        :room="addRoomData"
+        :isEdit="true"
+        :isAdd="isAdd"
+        @add="addRoom"
+      />
 
-      <RoomCard v-for="room in roomStore.roomList" :key="room.id" :room="room" :isEdit="room.checked"
-        :isActive="room.active" @del="delRoom" @edit="editRoom" @open-edit="openEdit" @toggle-room="toggleRoom" />
+      <RoomCard
+        v-for="room in roomStore.roomList"
+        :key="room.id"
+        :room="room"
+        :isEdit="room.checked"
+        :isActive="room.active"
+        @del="delRoom"
+        @edit="editRoom"
+        @open-edit="openEdit"
+        @toggle-room="toggleRoom"
+      />
     </div>
   </div>
 </template>

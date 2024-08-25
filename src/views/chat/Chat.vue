@@ -33,7 +33,7 @@ let isUserScrolling = ref(false); // 用户滚动状态
 const tp = ref(null);
 function chatScroll(event: Event) {
   const el = event.target as HTMLDivElement;
-  const threshold = 50; // 自定义阈值
+  const threshold = 100; // 自定义阈值
 
   // 判断用户是否滚动到接近底部，如果用户手动滚动，设置 isUserScrolling 为 true
   isUserScrolling.value =
@@ -132,18 +132,32 @@ watch(
     <!-- 聊天消息区域 -->
     <div class="flex flex-1 flex-col">
       <!-- 聊天框 -->
-      <div class="flex-1 scrollbar-hidden overflow-auto" @scroll="chatScroll" ref="tp">
+      <div
+        class="flex-1 scrollbar-hidden overflow-auto"
+        @scroll="chatScroll"
+        ref="tp"
+      >
         <!-- 聊天记录不是空 -->
-        <div v-show="chatStore.messageList && chatStore.messageList.length >= 1"
-          v-for="(item, index) in chatStore.messageList" :key="index">
-          <Message :role="item.role" :content="item.content" :dateTime="item.date_time" />
+        <div
+          v-show="chatStore.messageList && chatStore.messageList.length >= 1"
+          v-for="(item, index) in chatStore.messageList"
+          :key="index"
+        >
+          <Message
+            :role="item.role"
+            :content="item.content"
+            :dateTime="item.date_time"
+          />
         </div>
         <!-- 聊天列表为空 -->
-        <div class="relative flex h-full w-full items-end justify-center"
-          v-show="chatStore.messageList && chatStore.messageList.length < 1">
+        <div
+          class="relative flex h-full w-full items-end justify-center"
+          v-show="chatStore.messageList && chatStore.messageList.length < 1"
+        >
           <img :src="defaultTempImage" class="object-cover h-[80%]" />
           <div
-            class="absolute bg-white shadow-md border-[1px] text-sm top-[24%] left-[55%] w-[100px] p-[10px] rounded-t-[20px] rounded-r-[20px]">
+            class="absolute bg-white shadow-md border-[1px] text-sm top-[24%] left-[55%] w-[100px] p-[10px] rounded-t-[20px] rounded-r-[20px]"
+          >
             哦哈哟！有什么可以帮到你的吗?
           </div>
         </div>
@@ -153,8 +167,13 @@ watch(
       </div>
       <!-- 输入框 -->
       <div class="h-max">
-        <Input :isGeneration="isGeneration" @send="send" @file="file" @goto-bottom="scrollTop"
-          :is-goto-bottom="isUserScrolling" />
+        <Input
+          :isGeneration="isGeneration"
+          @send="send"
+          @file="file"
+          @goto-bottom="scrollTop"
+          :is-goto-bottom="isUserScrolling"
+        />
       </div>
     </div>
     <!-- 会话列表 -->
