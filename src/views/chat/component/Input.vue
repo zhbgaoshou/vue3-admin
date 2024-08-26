@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { defaultModel } from "@/config/chat";
 
-const emit = defineEmits(["send", "file", "goto-bottom"]);
+import SelectorModelCard from "./SelectorModelCard.vue";
+
+import useChatStore from "@/store/modules/chat";
+
+const chatStore = useChatStore();
+
+const emit = defineEmits(["send", "file", "goto-bottom", "stop-fetch"]);
 const props = defineProps(["role", "content", "isGotoBottom", "isGeneration"]);
 const input = ref("");
 const textareaStyle = {
@@ -14,13 +19,9 @@ const textareaStyle = {
 const icons = computed(() => [
   { name: "FolderAdd", class: "" },
   {
-    name: "Microphone",
-    class: "",
-  },
-  {
     name: props.isGeneration ? "SwitchButton" : "Position",
     class: props.isGeneration
-      ? "!bg-slate-300 hover:shadow-none !cursor-not-allowed"
+      ? "!bg-slate-200 hover:shadow-none cursor-pointer "
       : "",
   },
 ]);
@@ -30,12 +31,21 @@ function clickIcon(iconName: string) {
     case "Position":
       emit("send", input);
       break;
+    case "SwitchButton":
+      emit("stop-fetch");
+      break;
   }
 }
 
 function changeFile(e: Event) {
   const el = e.target as HTMLInputElement;
   emit("file", el.files);
+}
+
+let isShowPopover = ref(false);
+function handleToggleModel(model: string) {
+  chatStore.toggleModel(model);
+  isShowPopover.value = false;
 }
 </script>
 
@@ -48,9 +58,35 @@ function changeFile(e: Event) {
         <el-icon>
           <InfoFilled />
         </el-icon>
-        <p class="mx-[5px] text-slate-400 font-bold text-sm">
-          当前模型:{{ defaultModel }}
-        </p>
+        <!-- start选择model -->
+        <el-popover
+          placement="top"
+          :hide-after="0"
+          trigger="click"
+          width="max-content"
+          popper-class="!rounded-[20px] w-max-[100%]"
+          :visible="isShowPopover"
+        >
+          <template #reference>
+            <p
+              @click="isShowPopover = !isShowPopover"
+              class="mx-[5px] text-black font-bold text-sm flex items-center cursor-pointer"
+            >
+              {{ chatStore.fetchModel.name }}
+              <el-icon class="mx-[3px]">
+                <component is="ArrowUpBold"></component>
+              </el-icon>
+            </p>
+          </template>
+
+          <SelectorModelCard
+            @toggle-model="handleToggleModel"
+            v-for="model in chatStore.modelList"
+            :key="model.value"
+            :model="model"
+          />
+        </el-popover>
+        <!-- end选择model -->
       </div>
       <!-- 回到底部 -->
       <div
@@ -66,21 +102,23 @@ function changeFile(e: Event) {
       <div class="flex items-center relative">
         <el-icon
           @click="clickIcon(icon.name)"
+          :color="icon.name === 'SwitchButton' ? '#ef4444' : ''"
           v-for="icon in icons"
           size="34"
           :class="icon.class"
           class="icon-style"
         >
           <component :is="icon.name" class="p-[5px]"></component>
+          <input
+            v-show="icon.name === 'FolderAdd'"
+            class="w-full h-full absolute opacity-0"
+            type="file"
+            @change="changeFile"
+          />
         </el-icon>
-        <input
-          class="w-[40px] h-[40px] absolute opacity-0"
-          type="file"
-          @change="changeFile"
-        />
       </div>
     </div>
-    <!-- 输入框 -->
+    <!-- 输入框textarea -->
     <el-input
       v-model="input"
       show-word-limit
@@ -94,4 +132,8 @@ function changeFile(e: Event) {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.el-card__body) {
+  --el-card-padding: 5px;
+}
+</style>

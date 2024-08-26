@@ -3,9 +3,10 @@ import { beforeLoginOut } from "@/utils/local";
 import { useRouter, useRoute } from "vue-router";
 import useUserStore from "@/store/modules/user";
 import ToggleTheme from "./component/ToggleTheme.vue";
-import { ref } from 'vue'
+import { ref } from "vue";
 import Room from "@/views/chat/component/Room.vue";
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox } from "element-plus";
+import MoreIcon from "@/assets/svgs/more.svg";
 
 const $router = useRouter();
 const $route = useRoute();
@@ -26,8 +27,7 @@ async function loginOut() {
         re: $route.path,
       },
     });
-  } catch (error) { }
-
+  } catch (error) {}
 }
 
 function widthFull() {
@@ -47,15 +47,15 @@ function toggleTheme(isDark: boolean) {
   }
 }
 
-let openDrawer = ref(false)
+let openDrawer = ref(false);
 
 function openRoom() {
-  openDrawer.value = !openDrawer.value
+  openDrawer.value = !openDrawer.value;
 }
 
 defineExpose({
-  loginOut
-})
+  loginOut,
+});
 </script>
 
 <template>
@@ -71,8 +71,10 @@ defineExpose({
       <ToggleTheme @toggle="toggleTheme" />
     </div>
     <!-- 头像 -->
-    <img :src="userStore.userInfo.profile.image"
-      class="w-[32px] h-[32px] rounded-full object-cover border-2 border-sky-200" />
+    <img
+      :src="userStore.userInfo.profile.image"
+      class="w-[32px] h-[32px] rounded-full object-cover border-2 border-sky-200"
+    />
     <!-- 名字 -->
     <span class="text-sm text-slate-500 mx-[3px] hidden md:block">
       {{ userStore.userInfo.username }}
@@ -83,14 +85,18 @@ defineExpose({
         <component is="Right" class="p-[3px]"></component>
       </el-icon>
     </div>
-
+    <!-- 更多 -->
     <div class="md:hidden flex items-center mx-[10px]" @click="openRoom">
-      <el-icon size="18">
-        <component is="Fold"></component>
-      </el-icon>
+      <MoreIcon />
     </div>
     <!-- 小屏幕显示 -->
-    <el-drawer :with-header="false" v-model="openDrawer" title="" direction="rtl" size="max-content">
+    <el-drawer
+      :with-header="false"
+      v-model="openDrawer"
+      title=""
+      direction="rtl"
+      size="max-content"
+    >
       <Room class="border-none" />
     </el-drawer>
   </div>

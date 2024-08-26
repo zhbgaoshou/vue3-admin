@@ -53,6 +53,8 @@ function scrollTop(trigger = "") {
 }
 
 let isGeneration = ref(false);
+const controller = new AbortController();
+const signal = controller.signal;
 
 async function send(content: any) {
   if (!content.value) {
@@ -75,7 +77,7 @@ async function send(content: any) {
 
   try {
     isGeneration.value = true;
-    const response = await chat3Api(userMessage);
+    const response = await chat3Api(userMessage, signal);
     const reader = (response.body as ReadableStream<Uint8Array>).getReader();
     const textDecoder = new TextDecoder();
 
@@ -116,6 +118,11 @@ async function send(content: any) {
 
 function file(file: FileList) {
   console.log(file[0]);
+}
+
+function handleStopFetch() {
+  // 停止生成
+  if (isGeneration.value) controller.abort();
 }
 
 watch(
@@ -173,6 +180,7 @@ watch(
           @file="file"
           @goto-bottom="scrollTop"
           :is-goto-bottom="isUserScrolling"
+          @stop-fetch="handleStopFetch"
         />
       </div>
     </div>

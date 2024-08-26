@@ -1,14 +1,16 @@
 import type { chatParams } from "./type";
 import useUserStore from "@/store/modules/user";
-import { defaultModel } from "@/config/chat";
+import useChatStore from "@/store/modules/chat";
 import request from "@/utils/request";
 
-export const chat3Api = (data: chatParams) => {
+export const chat3Api = (data: chatParams, signal: AbortSignal) => {
   const userStore = useUserStore();
-  return fetch(`/api/chat/index?model=${defaultModel}`, {
+  const chatStore = useChatStore();
+  return fetch(`/api/chat/index?model=${chatStore.fetchModel.value}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${userStore.token}` },
     body: JSON.stringify(data),
+    signal,
   });
 };
 
