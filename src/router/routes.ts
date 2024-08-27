@@ -1,14 +1,15 @@
 import type { RouteRecordRaw } from "vue-router";
 
-export const menuRoutes: RouteRecordRaw[] = [
+// 异步路由
+export const asyncRoutes: RouteRecordRaw[] = [
   {
-    path: "/",
+    path: "/home",
     component: () => import("@/layout/Layout.vue"),
-    name: "layout",
-    redirect: "/home",
+    name: "dashboard",
+    redirect: "/home/index",
     children: [
       {
-        path: "/home",
+        path: "/home/index",
         component: () => import("@views/home/Home.vue"),
         name: "home",
         meta: {
@@ -37,34 +38,20 @@ export const menuRoutes: RouteRecordRaw[] = [
           icon: "UserFilled",
         },
       },
-      {
-        path: "/acl/rule",
-        component: () => import("@views/acl/rule/Rule.vue"),
-        name: "rule",
-        meta: {
-          title: "角色管理",
-          icon: "Lock",
-        },
-      },
-      {
-        path: "/acl/menu",
-        component: () => import("@views/acl/menu/Menu.vue"),
-        name: "menu",
-        meta: {
-          title: "菜单管理",
-          icon: "Operation",
-        },
-      },
     ],
   },
+];
+
+// 静态路由
+export const menuRoutes: RouteRecordRaw[] = [
   {
     path: "/chat",
     component: () => import("@/layout/Layout.vue"),
     name: "chat",
-    redirect: "/chat/3.5",
+    redirect: "/chat/ai",
     children: [
       {
-        path: "/chat/3.5",
+        path: "/chat/ai",
         component: () => import("@views/chat/Chat.vue"),
         name: "chat",
         meta: {
@@ -76,7 +63,12 @@ export const menuRoutes: RouteRecordRaw[] = [
   },
 ];
 
+// 全部路由表
 const routes: RouteRecordRaw[] = [
+  {
+    path: "/",
+    redirect: "/chat/ai",
+  },
   ...menuRoutes,
   {
     path: "/login",
@@ -93,6 +85,10 @@ const routes: RouteRecordRaw[] = [
     meta: {
       hidden: true,
     },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/404",
   },
 ];
 

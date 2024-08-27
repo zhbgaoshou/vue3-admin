@@ -20,6 +20,10 @@ export interface userInfo {
   profile: {
     image: string;
   };
+  is_superuser: boolean;
+  is_staff: boolean;
+  is_active: boolean;
+  last_login: string;
 }
 
 interface userInfoRes extends Iresponse<userInfo> {}

@@ -17,7 +17,6 @@ const textareaStyle = {
 };
 
 const icons = computed(() => [
-  { name: "FolderAdd", class: "" },
   {
     name: props.isGeneration ? "SwitchButton" : "Position",
     class: props.isGeneration
@@ -121,13 +120,11 @@ function handleToggleModel(model: string) {
     <!-- 输入框textarea -->
     <el-input
       v-model="input"
-      show-word-limit
       type="textarea"
       placeholder="请输入内容"
       :input-style="textareaStyle"
       :autosize="{ minRows: 2, maxRows: 10 }"
       resize="none"
-      :maxlength="400"
     />
   </div>
 </template>

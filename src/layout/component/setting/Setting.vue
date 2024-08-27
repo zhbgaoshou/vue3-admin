@@ -15,10 +15,11 @@ const userStore = useUserStore();
 async function loginOut() {
   try {
     // 确认删除对话框
-    await ElMessageBox.confirm(`确定退出登录吗 ?`, "温馨提示", {
+    await ElMessageBox.confirm(`确定退出登录吗 ?`, "退出登录", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
-      type: "error",
+      type: "warning",
+      roundButton: true,
     });
     beforeLoginOut();
     $router.push({

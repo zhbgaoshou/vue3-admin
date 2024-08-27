@@ -53,20 +53,38 @@ watch(
 </script>
 
 <template>
-  <div :class="{ ' border-[1px] border-black': room.active }"
-    class="mx-[10px] relative bg-white shadow-sm border-[1px] h-[40px] rounded-lg p-5px flex items-center justify-between my-[5px]">
+  <div
+    :class="{ ' border-[1px] border-black': room.active }"
+    class="mx-[10px] relative bg-white shadow-sm border-[1px] h-[40px] rounded-lg p-5px flex items-center justify-between my-[5px]"
+  >
     <!-- 文本信息 -->
-    <div @click="emit('toggle-room', room)"
-      class="h-full flex-1 items-center flex border-r-[1px] border-slate-200 cursor-pointer">
-      <p v-show="!isEdit" class="px-[10px] flex-1 basis-0 text-sm text-slate-500">
+    <div
+      @click="emit('toggle-room', room)"
+      class="h-full flex-1 items-center flex border-r-[1px] border-slate-200 cursor-pointer"
+    >
+      <p
+        v-show="!isEdit"
+        class="px-[10px] flex-1 basis-0 text-sm text-slate-500"
+      >
         {{ room.name }}
       </p>
-      <el-input ref="inputDOM" maxlength="12" placeholder="最多12字"  v-show="isEdit || isAdd" v-model="inValue" />
+      <el-input
+        ref="inputDOM"
+        maxlength="12"
+        placeholder="最多12字"
+        v-show="isEdit || isAdd"
+        v-model="inValue"
+      />
     </div>
     <!-- 按钮组 -->
     <div class="flex">
-      <el-icon size="18" v-for="icon in icons" class="mx-[5px]" :class="{ 'mr-0': icon === 'Delete' }"
-        @click="clickIcon(icon)">
+      <el-icon
+        size="18"
+        v-for="icon in icons"
+        class="mx-[5px]"
+        :class="{ 'mr-0': icon === 'Delete' }"
+        @click="clickIcon(icon)"
+      >
         <component :is="icon"></component>
       </el-icon>
     </div>

@@ -45,8 +45,6 @@ const useChatStore = defineStore("chat", () => {
   }
 
   function toggleModel(model: any) {
-    console.log(modelList.value);
-
     modelList.value.forEach((item: any) => {
       if (item.selected) {
         item.selected = false;

@@ -1,10 +1,10 @@
-<script setup lang="ts">
-import LogoIcon from "@/assets/svgs/logo.svg";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="h-[50px] flex items-center border-b-[1px]">
-    <LogoIcon class="ml-[20px] mr-[10px]" />
+  <div class="h-[50px] flex items-center justify-center border-b-[1px]">
+    <el-icon size="30" class="cursor-pointer">
+      <component is="Message"></component>
+    </el-icon>
   </div>
 </template>
 

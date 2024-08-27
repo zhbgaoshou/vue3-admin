@@ -16,8 +16,6 @@ const roomStore = useRoomStore();
 const userStore = useUserStore();
 
 async function getMessageList() {
-  console.log("getMessageList");
-
   await chatStore.fetchMessageList(
     userStore.user,
     roomStore.activeRoom.id as number
@@ -53,6 +51,7 @@ function scrollTop(trigger = "") {
 }
 
 let isGeneration = ref(false);
+let loadingText = ref("");
 const controller = new AbortController();
 const signal = controller.signal;
 
@@ -60,6 +59,7 @@ async function send(content: any) {
   if (!content.value) {
     return;
   }
+  loadingText.value = "正在寻找最佳方案...";
 
   const userMessage: chatParams = {
     content: content.value,
@@ -78,9 +78,9 @@ async function send(content: any) {
   try {
     isGeneration.value = true;
     const response = await chat3Api(userMessage, signal);
+    loadingText.value = "";
     const reader = (response.body as ReadableStream<Uint8Array>).getReader();
     const textDecoder = new TextDecoder();
-
     text.value = ""; // 重置显示区域的文本
 
     while (true) {
@@ -122,7 +122,11 @@ function file(file: FileList) {
 
 function handleStopFetch() {
   // 停止生成
-  if (isGeneration.value) controller.abort();
+  if (isGeneration.value) {
+    controller.abort();
+    isGeneration.value = false;
+    loadingText.value = "";
+  }
 }
 
 watch(
@@ -138,44 +142,44 @@ watch(
   <div class="h-full flex grid-bg">
     <!-- 聊天消息区域 -->
     <div class="flex flex-1 flex-col">
-      <!-- 聊天框 -->
+      <!-- 聊天框(滚动区域) -->
       <div
         class="flex-1 scrollbar-hidden overflow-auto"
         @scroll="chatScroll"
         ref="tp"
       >
         <!-- 聊天记录不是空 -->
-        <div
+        <Message
           v-show="chatStore.messageList && chatStore.messageList.length >= 1"
           v-for="(item, index) in chatStore.messageList"
           :key="index"
-        >
-          <Message
-            :role="item.role"
-            :content="item.content"
-            :dateTime="item.date_time"
-          />
-        </div>
-        <!-- 聊天列表为空 -->
+          :role="item.role"
+          :content="item.content"
+          :dateTime="item.date_time"
+        />
+        <!-- 正在生成的消息 -->
+        <Message
+          role="assistant"
+          :content="text || loadingText"
+          v-show="text || loadingText"
+        />
+        <!-- 聊天列表为空的时候显示 -->
         <div
-          class="relative flex h-full w-full items-end justify-center"
+          class="relative flex h-full w-full items-center justify-center"
           v-show="chatStore.messageList && chatStore.messageList.length < 1"
         >
           <img :src="defaultTempImage" class="object-cover h-[80%]" />
           <div
             class="absolute bg-white shadow-md border-[1px] text-sm top-[24%] left-[55%] w-[100px] p-[10px] rounded-t-[20px] rounded-r-[20px]"
           >
-            哦哈哟！有什么可以帮到你的吗?
+            有什么可以帮到你的吗?
           </div>
         </div>
-
-        <!-- 正在生成的消息 -->
-        <Message role="assistant" :content="text" v-show="text" />
       </div>
       <!-- 输入框 -->
       <div class="h-max">
         <Input
-          :isGeneration="isGeneration"
+          :is-generation="isGeneration"
           @send="send"
           @file="file"
           @goto-bottom="scrollTop"

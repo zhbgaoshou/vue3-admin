@@ -2,48 +2,62 @@
 import Logo from "./component/logo/Logo.vue";
 import Menu from "./component/menu/Menu.vue";
 import Setting from "./component/setting/Setting.vue";
-import useMenuStore from "@/store/modules/menu";
+import useUserStore from "@/store/modules/user";
 import { useRoute } from "vue-router";
 
 import { ref } from "vue";
 
-const menuStore = useMenuStore();
+const userStore = useUserStore();
 const $route = useRoute();
-let openDrawer = ref(false)
+let openDrawer = ref(false);
 
 function showMenu() {
-  openDrawer.value = !openDrawer.value
+  openDrawer.value = !openDrawer.value;
 }
 
-const setting = ref({} as any)
+const setting = ref({} as any);
 
 function logOut() {
-  setting.value.loginOut()
+  setting.value.loginOut();
 }
 </script>
-
 
 <template>
   <!-- 宽高都继承#app -->
   <div class="flex h-full">
     <!-- 菜单 -->
-    <div class="w-[60px] border-r-[1px] bg-white  hidden md:static md:block">
+    <div class="w-[60px] border-r-[1px] bg-white hidden md:static md:block">
       <Logo />
       <el-scrollbar>
-        <el-menu :collapse="true" style="border: none; width: 100%" :default-active="$route.path"
-          :collapse-transition="false" router>
-          <Menu :menuList="menuStore.menuList"></Menu>
+        <el-menu
+          :collapse="true"
+          style="border: none; width: 100%"
+          :default-active="$route.path"
+          :collapse-transition="false"
+          router
+        >
+          <Menu :menuList="userStore.menuList"></Menu>
         </el-menu>
       </el-scrollbar>
     </div>
     <!-- 小屏幕显示 -->
-    <el-drawer v-model="openDrawer" :with-header="false" title="导航" direction="ltr" size="max-content">
+    <el-drawer
+      v-model="openDrawer"
+      :with-header="false"
+      title="导航"
+      direction="ltr"
+      size="max-content"
+    >
       <div class="flex flex-col">
         <div class="w-max bg-white flex-col h-full">
           <el-scrollbar>
-            <el-menu style="border: none; width: 100%" :default-active="$route.path" :collapse-transition="false"
-              router>
-              <Menu :menuList="menuStore.menuList"></Menu>
+            <el-menu
+              style="border: none; width: 100%"
+              :default-active="$route.path"
+              :collapse-transition="false"
+              router
+            >
+              <Menu :menuList="userStore.menuList"></Menu>
             </el-menu>
           </el-scrollbar>
         </div>
@@ -53,7 +67,9 @@ function logOut() {
     <!-- 右边 -->
     <div class="flex-1 flex flex-col bg-white">
       <!-- 顶部 -->
-      <div class="h-[50px] flex justify-between items-center border-b-[1px] shadow-sm">
+      <div
+        class="h-[50px] flex justify-between items-center border-b-[1px] shadow-sm"
+      >
         <!-- 顶部左边 -->
         <div class="pl-[10px]">
           <!-- md宽度下显示，其余情况隐藏 -->
@@ -80,6 +96,6 @@ function logOut() {
 }
 
 :deep(.el-drawer) {
-  --el-drawer-padding-primary: 10px
+  --el-drawer-padding-primary: 10px;
 }
 </style>

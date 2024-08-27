@@ -47,10 +47,11 @@ async function delRoom(room: room) {
 
   try {
     // 确认删除对话框
-    await ElMessageBox.confirm(`确定删除 ${room.name} ?`, "温馨提示", {
+    await ElMessageBox.confirm(`确定删除 ${room.name} ?`, "删除会话", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning",
+      roundButton: true,
     });
     const res = await deleteRoomApi(room.id as number);
     if (res.status === 204) {

@@ -4,13 +4,14 @@ import type { MessageProps } from "./type";
 import { MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/preview.css";
 import { chat3Default } from "@/config/chat";
+// 'default' | 'github' | 'vuepress' | 'mk-cute' | 'smart-blue' | 'cyanosis'
 
 defineProps<MessageProps>();
 const userStore = useUserStore();
 </script>
 
 <template>
-  <div class="justify-between flex" :class="{ 'mb-[10px]': role === 'assistant' }">
+  <div class="justify-between flex mb-[10px]">
     <!-- 左边头像 -->
     <div class="w-0 flex justify-center md:w-[50px]">
       <img
@@ -31,14 +32,17 @@ const userStore = useUserStore();
       </div>
       <!-- 消息 -->
       <div
-        class="bg-white shadow-sm w-max max-w-[100%] border-[1px] rounded-[10px] overflow-hidden"
+        class="bg-white shadow-sm w-max max-w-[100%] border-[1px] rounded-[20px] overflow-hidden"
       >
         <!-- ai返回来的消息 -->
         <MdPreview
           v-if="role === 'assistant'"
           :modelValue="content"
-          :codeFold="false"
-          class="px-[8px] !bg-white"
+          theme="light"
+          previewTheme="cyanosis"
+          :autoFoldThreshold="99999"
+          :showCodeRowNumber="false"
+          class="p-0"
         />
         <!-- 用户输入的消息，我无需markdown编译 -->
         <div
@@ -62,7 +66,7 @@ const userStore = useUserStore();
 </template>
 
 <style scoped>
-:deep(.md-editor-preview-wrapper) {
-  padding: 0;
+:deep(.cyanosis-theme p) {
+  margin: 0;
 }
 </style>
