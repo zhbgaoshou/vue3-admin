@@ -17,7 +17,7 @@ router.beforeEach(async function (to, from, next) {
       } else {
         const { fetchInfo } = userStore;
         await fetchInfo();
-        next();
+        next({...to, replace: true});
       }
     }
   } else {

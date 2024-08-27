@@ -4,12 +4,12 @@
 
 @layer components {
   .icon-style {
-    @apply mx-[2px] rounded-[10px] bg-white cursor-pointer hover:shadow-md border-[1px];
+    @apply mx-[2px] rounded-[10px] bg-white cursor-pointer hover:shadow-sm border-[1px];
   }
 }
 
 :root {
-  --w: 1080px;
+  --w: 1280px;
 }
 
 #app,

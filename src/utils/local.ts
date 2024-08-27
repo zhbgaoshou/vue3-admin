@@ -19,7 +19,6 @@ export function removeToken() {
 
 export function beforeLoginOut() {
   const userStore = useUserStore();
-
   userStore.token = "";
   userStore.userInfo.username = "";
   userStore.userInfo.email = "";

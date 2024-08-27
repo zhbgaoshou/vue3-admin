@@ -74,6 +74,7 @@ watch(
         placeholder="最多12字"
         v-show="isEdit || isAdd"
         v-model="inValue"
+        @keyup.enter="addOrEdit"
       />
     </div>
     <!-- 按钮组 -->

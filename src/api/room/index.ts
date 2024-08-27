@@ -3,7 +3,7 @@ import type { roomListRes, room, addRoomRes, editRoomParams } from "./type";
 
 // 获取用户会话列表
 export function roomListApi(user: number) {
-  return request.get<any, roomListRes>(`/chat/room/?user=${user}`);
+  return request.get<any, any>(`/chat/room/categorized/?user=${user}`);
 }
 
 // 添加会话

@@ -20,6 +20,8 @@ async function loginOut() {
       cancelButtonText: "取消",
       type: "warning",
       roundButton: true,
+      showClose:false,
+      customClass:'!rounded-[20px]'
     });
     beforeLoginOut();
     $router.push({

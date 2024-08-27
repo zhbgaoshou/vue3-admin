@@ -1,17 +1,20 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { roomListApi, addRoomApi, updateActiveApi } from "@/api/room";
 import type { room } from "@/api/room/type";
 import { ElMessage } from "element-plus";
 
 const useRoomStore = defineStore("room", () => {
-  const roomList = ref([] as room[]);
+  const roomList = ref({} as any);
+  const activeRoom = ref({} as room[])
 
   async function fetchRoomList(user: number) {
     const res = await roomListApi(user);
     if (res.code < 400) {
-      roomList.value = res.data.results;
-      return res.data.results;
+      activeRoom.value = res.data.active_room[0]
+      delete res.data.active_room;
+      roomList.value = res.data;
+      return res.data;
     } else {
       ElMessage("获取会话列表失败");
     }
@@ -35,9 +38,6 @@ const useRoomStore = defineStore("room", () => {
     }
   }
 
-  const activeRoom = computed(() => {
-    return roomList.value.filter((item) => item.active)[0];
-  });
 
   return {
     roomList,

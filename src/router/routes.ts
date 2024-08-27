@@ -43,7 +43,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
 ];
 
 // 静态路由
-export const menuRoutes: RouteRecordRaw[] = [
+export const staticRoutes: RouteRecordRaw[] = [
   {
     path: "/chat",
     component: () => import("@/layout/Layout.vue"),
@@ -69,7 +69,7 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     redirect: "/chat/ai",
   },
-  ...menuRoutes,
+  ...staticRoutes,
   {
     path: "/login",
     component: () => import("@views/login/Login.vue"),
