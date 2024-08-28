@@ -47,7 +47,7 @@ request.interceptors.response.use(
     switch (status) {
       case 401:
         beforeLoginOut();
-        router.replace("/login");
+        router.replace("/user");
         break;
     }
 

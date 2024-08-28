@@ -7,7 +7,7 @@ router.beforeEach(async function (to, from, next) {
   const token = userStore.token;
   if (token) {
     // 已登陆
-    if (to.path === "/login") {
+    if (to.path === "/user") {
       // 登录之后不能再去登录页
       next("/");
     } else {
@@ -17,11 +17,11 @@ router.beforeEach(async function (to, from, next) {
       } else {
         const { fetchInfo } = userStore;
         await fetchInfo();
-        next({...to, replace: true});
+        next({ ...to, replace: true });
       }
     }
   } else {
     // 未登录
-    to.path === "/login" ? next() : next(`/login?re=${from.path}`);
+    to.path === "/user" ? next() : next(`/user?re=${from.path}`);
   }
 });

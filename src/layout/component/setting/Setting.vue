@@ -20,12 +20,13 @@ async function loginOut() {
       cancelButtonText: "取消",
       type: "warning",
       roundButton: true,
-      showClose:false,
-      customClass:'!rounded-[20px]'
+      showClose: false,
+      customClass: "!rounded-[20px]",
     });
+
     beforeLoginOut();
     $router.push({
-      path: "/login",
+      path: "/user",
       query: {
         re: $route.path,
       },
@@ -88,6 +89,8 @@ defineExpose({
         <component is="Right" class="p-[3px]"></component>
       </el-icon>
     </div>
+    <!-- 联系我 -->
+
     <!-- 更多 -->
     <div class="md:hidden flex items-center mx-[10px]" @click="openRoom">
       <MoreIcon />

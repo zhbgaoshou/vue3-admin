@@ -17,6 +17,9 @@ importers:
       element-plus:
         specifier: ^2.8.0
         version: 2.8.0(vue@3.4.38(typescript@5.5.4))
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       md-editor-v3:
         specifier: ^4.19.1
         version: 4.19.1(@codemirror/view@6.32.0)(@lezer/common@1.2.1)(vue@3.4.38(typescript@5.5.4))

@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { inject, onMounted } from "vue";
+
 import useUserStore from "@/store/modules/user";
 import type { MessageProps } from "./type";
 import { MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/preview.css";
 import { chat3Default } from "@/config/chat";
 // 'default' | 'github' | 'vuepress' | 'mk-cute' | 'smart-blue' | 'cyanosis'
+const scrollBottom = inject("scrollBottom") as any;
 
+onMounted(() => {
+  scrollBottom();
+});
 defineProps<MessageProps>();
 const userStore = useUserStore();
 </script>
@@ -32,7 +38,7 @@ const userStore = useUserStore();
       </div>
       <!-- 消息 -->
       <div
-        class="bg-white shadow-sm w-max max-w-[100%] border-[1px] rounded-[20px] overflow-hidden"
+        class="bg-white font-['Monaco'] shadow-sm w-max max-w-[100%] border-[1px] rounded-[30px] overflow-hidden"
       >
         <!-- ai返回来的消息 -->
         <MdPreview
@@ -42,7 +48,7 @@ const userStore = useUserStore();
           previewTheme="cyanosis"
           :autoFoldThreshold="99999"
           :showCodeRowNumber="false"
-          class="p-0"
+          class="p-0 !font-['Monaco']"
         />
         <!-- 用户输入的消息，我无需markdown编译 -->
         <div
@@ -68,5 +74,10 @@ const userStore = useUserStore();
 <style scoped>
 :deep(.cyanosis-theme p) {
   margin: 0;
+}
+
+:deep(.md-editor-preview .md-editor-code pre code) {
+  font-family: "Monaco";
+  font-size: 16px;
 }
 </style>

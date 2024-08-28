@@ -6,6 +6,7 @@ import { deleteRoomApi, editRoomApi, addRoomApi } from "@/api/room";
 import { ElMessage, ElMessageBox, ElNotification } from "element-plus";
 import type { room } from "@/api/room/type";
 import { ref, reactive } from "vue";
+import empty from "@/assets/images/room_null.png";
 
 const roomStore = useRoomStore();
 const { user } = useUserStore();
@@ -16,24 +17,21 @@ const addRoomData = reactive({
   user: 0,
 } as room);
 
-
 function isExRoom(rooms: any) {
   for (let key in rooms) {
     if (rooms[key].length) {
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 }
 async function getRoomList() {
   try {
     const exRoom = await roomStore.fetchRoomList(user);
-    const ex = isExRoom(exRoom)
+    const ex = isExRoom(exRoom);
     if (!ex) {
       // 如果会话列表为空，则创建一个新会话并重新获取列表
       await roomStore.fetchAddRoom({ name: "新会话", user, active: true });
-      console.log("创建新会话");
-
       await roomStore.fetchRoomList(user);
     }
   } catch (error) {
@@ -65,7 +63,7 @@ async function delRoom(room: room) {
       type: "warning",
       roundButton: true,
       showClose: false,
-      customClass: '!rounded-[20px]'
+      customClass: "!rounded-[20px]",
     });
     const res = await deleteRoomApi(room.id as number);
     if (res.status === 204) {
@@ -74,7 +72,7 @@ async function delRoom(room: room) {
     } else {
       ElMessage.error("删除失败，稍后重试");
     }
-  } catch (error) { }
+  } catch (error) {}
 }
 
 function openEdit(room: room) {
@@ -83,7 +81,6 @@ function openEdit(room: room) {
 // 编辑会话的处理函数(点击勾选按钮处理)
 async function editRoom(room: room, newName: string) {
   if (!newName || room.name === newName) {
-    // isEdit.value = false;
     room.checked = false;
     return;
   }
@@ -140,11 +137,12 @@ async function toggleRoom(room: room) {
 }
 
 getRoomList();
-
 </script>
 
 <template>
-  <div class="w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col">
+  <div
+    class="w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col"
+  >
     <!-- 顶部 -->
     <div class="flex px-[10px] justify-between items-center">
       <h2 class="py-[5px] text-center text-slate-500 font-semibold">
@@ -158,21 +156,44 @@ getRoomList();
     <!-- 会话列表 -->
     <div class="flex-1 overflow-auto">
       <!-- 新增会话 -->
-      <RoomCard v-show="isAdd" :room="addRoomData" :isEdit="true" :isAdd="isAdd" @add="addRoom" />
+      <RoomCard
+        v-show="isAdd"
+        :room="addRoomData"
+        :isEdit="true"
+        :isAdd="isAdd"
+        @add="addRoom"
+      />
       <!-- 列表 -->
-      <el-collapse :model-value="['今天', '昨天', '三天前', '七天前', '一个月前']">
-
-        <el-collapse-item :name="key" v-for="(room, key) in roomStore.roomList" :key="key">
+      <el-collapse
+        :model-value="['今天', '昨天', '三天前', '七天前', '一个月前']"
+      >
+        <el-collapse-item
+          :name="key"
+          v-for="(room, key) in roomStore.roomList"
+          :key="key"
+        >
           <template #title>
             <span class="mx-[10px] font-semibold">{{ key }}</span>
           </template>
 
-          <el-empty v-if="!room.length" description="暂无新对话" :image-size="32" />
+          <el-empty
+            v-if="!room.length"
+            description="暂无新对话"
+            :image-size="36"
+            :image="empty"
+          />
 
-          <RoomCard v-for="item in room" :key="room.id" :room="item" :isEdit="room.checked" @del="delRoom"
-            @edit="editRoom" @open-edit="openEdit" @toggle-room="toggleRoom" />
+          <RoomCard
+            v-for="item in room"
+            :key="item.id"
+            :room="item"
+            :isEdit="item.checked"
+            @del="delRoom"
+            @edit="editRoom"
+            @open-edit="openEdit"
+            @toggle-room="toggleRoom"
+          />
         </el-collapse-item>
-
       </el-collapse>
     </div>
   </div>
@@ -185,6 +206,6 @@ getRoomList();
 
 :deep(.el-empty) {
   --el-empty-padding: 0;
-  --el-empty-description-margin-top: 0
+  --el-empty-description-margin-top: 0;
 }
 </style>

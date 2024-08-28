@@ -6,12 +6,12 @@ import { ElMessage } from "element-plus";
 
 const useRoomStore = defineStore("room", () => {
   const roomList = ref({} as any);
-  const activeRoom = ref({} as room[])
+  const activeRoom = ref({} as room);
 
   async function fetchRoomList(user: number) {
     const res = await roomListApi(user);
     if (res.code < 400) {
-      activeRoom.value = res.data.active_room[0]
+      activeRoom.value = res.data.active_room[0];
       delete res.data.active_room;
       roomList.value = res.data;
       return res.data;
@@ -37,7 +37,6 @@ const useRoomStore = defineStore("room", () => {
       return Promise.reject(new Error("fail"));
     }
   }
-
 
   return {
     roomList,

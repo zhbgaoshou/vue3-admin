@@ -23,7 +23,7 @@ const useChatStore = defineStore("chat", () => {
       {
         name: "ChatGPT-4o",
         value: "gpt-4o",
-        description: "我们的高智能旗舰模型适用于复杂、多步骤的任务",
+        description: "高智能旗舰模型适用于复杂、多步骤的任务",
         selected: false,
         icon: "PartlyCloudy",
       },
@@ -35,6 +35,7 @@ const useChatStore = defineStore("chat", () => {
   }
 
   async function fetchMessageList(user: number, room: number) {
+    messageList.value = [];
     const res = await messageApi(user, room);
     if (res.code === 200) {
       messageList.value = res.data;

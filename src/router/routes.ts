@@ -23,16 +23,16 @@ export const asyncRoutes: RouteRecordRaw[] = [
     path: "/acl",
     component: () => import("@/layout/Layout.vue"),
     name: "acl",
-    redirect: "/acl/user",
+    redirect: "/acl/acl_user",
     meta: {
       title: "权限管理",
       icon: "Connection",
     },
     children: [
       {
-        path: "/acl/user",
+        path: "/acl/acl_user",
         component: () => import("@views/acl/user/User.vue"),
-        name: "user",
+        name: "acl_user",
         meta: {
           title: "用户管理",
           icon: "UserFilled",
@@ -71,9 +71,9 @@ const routes: RouteRecordRaw[] = [
   },
   ...staticRoutes,
   {
-    path: "/login",
-    component: () => import("@views/login/Login.vue"),
-    name: "login",
+    path: "/user",
+    component: () => import("@views/user/User.vue"),
+    name: "user",
     meta: {
       hidden: true,
     },

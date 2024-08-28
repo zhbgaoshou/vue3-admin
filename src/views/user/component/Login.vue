@@ -54,43 +54,46 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <template>
-  <div class="w-full h-[100%] flex justify-center items-center">
-    <el-card class="w-[90%] max-w-[500px]">
-      <template #header>
-        <div class="card-header">
-          <span>LOGIN</span>
-        </div>
-      </template>
+  <el-card
+    style="border-radius: 20px; box-shadow: none; background-color: transparent"
+  >
+    <template #header>
+      <div class="">
+        <span>LOGIN</span>
+      </div>
+    </template>
 
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        label-width="auto"
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      label-width="auto"
+    >
+      <el-form-item label="账号" prop="username">
+        <el-input v-model="ruleForm.username" autocomplete="off" />
+      </el-form-item>
+
+      <el-form-item label="密码" prop="password">
+        <el-input
+          v-model="ruleForm.password"
+          type="password"
+          autocomplete="off"
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button
+        type="primary"
+        @click="submitForm(ruleFormRef)"
+        loading-icon="Eleme"
+        :loading="isLoading"
+        round
+        >登录</el-button
       >
-        <el-form-item label="账号" prop="username">
-          <el-input v-model="ruleForm.username" autocomplete="off" />
-        </el-form-item>
-
-        <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="ruleForm.password"
-            type="password"
-            autocomplete="off"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button
-          type="primary"
-          @click="submitForm(ruleFormRef)"
-          loading-icon="Eleme"
-          :loading="isLoading"
-          >登录</el-button
-        >
-        <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-      </template>
-    </el-card>
-  </div>
+      <el-button round @click="resetForm(ruleFormRef)">重置</el-button>
+    </template>
+  </el-card>
 </template>
+
+<style scoped></style>

@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import { ref, watch, nextTick, provide } from "vue";
+
 import Input from "./component/Input.vue";
 import Message from "./component/Message.vue";
 import { chat3Api } from "@/api/chat/chat3";
 import type { chatParams } from "@/api/chat/type";
-import { ref, watch, nextTick } from "vue";
 import { ElMessage } from "element-plus";
 import useChatStore from "@/store/modules/chat";
 import useRoomStore from "@/store/modules/room";
 import useUserStore from "@/store/modules/user";
 import Room from "./component/Room.vue";
-import { defaultTempImage } from "@/config/chat";
+// @ts-ignore
+import { throttle } from "lodash";
 
 const chatStore = useChatStore();
 const roomStore = useRoomStore();
@@ -21,24 +23,26 @@ async function getMessageList() {
     roomStore.activeRoom.id as number
   );
 
+  await nextTick();
   // 获取消息列表后滚动到底部
-  scrollTop();
+  scrollBottom();
 }
 
 let text = ref("");
 
 let isUserScrolling = ref(false); // 用户滚动状态
 const tp = ref(null);
-function chatScroll(event: Event) {
+
+const chatScroll = throttle(function (event: Event) {
   const el = event.target as HTMLDivElement;
-  const threshold = 100; // 自定义阈值
+  const threshold = 5; // 自定义阈值
 
   // 判断用户是否滚动到接近底部，如果用户手动滚动，设置 isUserScrolling 为 true
   isUserScrolling.value =
-    el.scrollHeight - el.scrollTop - el.clientHeight > threshold;
-}
+    el.scrollTop + el.clientHeight < el.scrollHeight - threshold;
+}, 50);
 
-function scrollTop(trigger = "") {
+const scrollBottom = throttle(function (trigger = "") {
   if (!isUserScrolling.value || trigger) {
     const el = tp.value as HTMLDivElement | null;
     if (el) {
@@ -48,7 +52,8 @@ function scrollTop(trigger = "") {
       });
     }
   }
-}
+}, 300);
+provide("scrollBottom", scrollBottom);
 
 let isGeneration = ref(false);
 let loadingText = ref("");
@@ -73,7 +78,7 @@ async function send(content: any) {
 
   // 确保消息渲染后滚动到底部
   await nextTick();
-  scrollTop();
+  scrollBottom();
 
   try {
     isGeneration.value = true;
@@ -92,7 +97,7 @@ async function send(content: any) {
       text.value += res;
       // 每次追加新内容后，立即滚动到底部
       await nextTick(); // 确保 DOM 更新
-      scrollTop();
+      scrollBottom();
     }
 
     // 最终生成的完整内容添加到消息列表
@@ -107,7 +112,7 @@ async function send(content: any) {
 
     // 再次确保最终渲染后滚动到底部
     await nextTick();
-    scrollTop();
+    scrollBottom();
   } catch (error) {
     console.log(error);
     ElMessage.error("error");
@@ -138,6 +143,12 @@ watch(
 );
 </script>
 
+<script lang="ts">
+export default {
+  name: "Chat",
+};
+</script>
+
 <template>
   <div class="h-full flex grid-bg">
     <!-- 聊天消息区域 -->
@@ -163,26 +174,22 @@ watch(
           :content="text || loadingText"
           v-show="text || loadingText"
         />
-        <!-- 聊天列表为空的时候显示 -->
+
         <div
-          class="relative flex h-full w-full items-center justify-center"
+          class="h-full flex justify-center items-center"
           v-show="chatStore.messageList && chatStore.messageList.length < 1"
         >
-          <img :src="defaultTempImage" class="object-cover h-[80%]" />
-          <div
-            class="absolute bg-white shadow-md border-[1px] text-sm top-[24%] left-[55%] w-[100px] p-[10px] rounded-t-[20px] rounded-r-[20px]"
-          >
-            有什么可以帮到你的吗?
-          </div>
+          <el-empty description="暂无记录" />
         </div>
       </div>
+
       <!-- 输入框 -->
       <div class="h-max">
         <Input
           :is-generation="isGeneration"
           @send="send"
           @file="file"
-          @goto-bottom="scrollTop"
+          @goto-bottom="scrollBottom"
           :is-goto-bottom="isUserScrolling"
           @stop-fetch="handleStopFetch"
         />

@@ -2,7 +2,6 @@
 import { ref, computed } from "vue";
 
 import SelectorModelCard from "./SelectorModelCard.vue";
-
 import useChatStore from "@/store/modules/chat";
 
 const chatStore = useChatStore();
@@ -14,13 +13,15 @@ const textareaStyle = {
   "box-shadow": "none",
   "border-radius": "0px",
   "padding-bottom": "20px",
+  color: "#000",
+  "font-size": "16px",
 };
 
 const icons = computed(() => [
   {
     name: props.isGeneration ? "SwitchButton" : "Position",
     class: props.isGeneration
-      ? "!bg-slate-200 hover:shadow-none cursor-pointer "
+      ? "!bg-[#000] hover:shadow-none cursor-pointer "
       : "",
   },
 ]);
@@ -103,11 +104,11 @@ function handleToggleModel(model: string) {
           @click="clickIcon(icon.name)"
           :color="icon.name === 'SwitchButton' ? '#ef4444' : ''"
           v-for="icon in icons"
-          size="34"
+          size="38"
           :class="icon.class"
           class="icon-style"
         >
-          <component :is="icon.name" class="p-[5px]"></component>
+          <component :is="icon.name" class="p-[8px]"></component>
           <input
             v-show="icon.name === 'FolderAdd'"
             class="w-full h-full absolute opacity-0"

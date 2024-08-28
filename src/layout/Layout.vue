@@ -20,6 +20,11 @@ const setting = ref({} as any);
 function logOut() {
   setting.value.loginOut();
 }
+
+let dialogVisible = ref(false);
+function handleMessage() {
+  dialogVisible.value = !dialogVisible.value;
+}
 </script>
 
 <template>
@@ -27,7 +32,7 @@ function logOut() {
   <div class="flex h-full">
     <!-- 菜单 -->
     <div class="w-[60px] border-r-[1px] bg-white hidden md:static md:block">
-      <Logo />
+      <Logo @click="handleMessage" />
       <el-scrollbar>
         <el-menu
           :collapse="true"
@@ -61,7 +66,7 @@ function logOut() {
             </el-menu>
           </el-scrollbar>
         </div>
-        <el-button round @click="logOut">退出登录</el-button>
+        <el-button @click="logOut" class="mt-[30px]">退出登录</el-button>
       </div>
     </el-drawer>
     <!-- 右边 -->
@@ -73,9 +78,12 @@ function logOut() {
         <!-- 顶部左边 -->
         <div class="pl-[10px]">
           <!-- md宽度下显示，其余情况隐藏 -->
-          <div class="md:hidden" @click="showMenu">
-            <el-icon size="24">
+          <div class="md:hidden">
+            <el-icon size="24" @click="showMenu">
               <component is="More"></component>
+            </el-icon>
+            <el-icon size="24" class="mx-[8px]" @click="handleMessage">
+              <component is="Message"></component>
             </el-icon>
           </div>
         </div>
@@ -84,9 +92,20 @@ function logOut() {
       </div>
       <!-- main -->
       <div class="flex-1 h-0">
-        <router-view />
+        <router-view></router-view>
       </div>
     </div>
+
+    <!-- 消息反馈提示 弹窗-->
+    <el-dialog v-model="dialogVisible" title="你好" width="300px">
+      <span>如果你遇到bug或者有什么建议可以联系我</span><br />
+      <span>QQ群：12346789</span><br />
+      <span>QQ邮箱：12346789</span><br />
+      <span>微信群：12342324</span><br />
+      <template #footer>
+        <div class="dialog-footer"></div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 

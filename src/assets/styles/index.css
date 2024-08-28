@@ -4,12 +4,16 @@
 
 @layer components {
   .icon-style {
-    @apply mx-[2px] rounded-[10px] bg-white cursor-pointer hover:shadow-sm border-[1px];
+    @apply mx-[2px] rounded-full bg-white cursor-pointer hover:shadow-sm border-[1px];
   }
 }
 
 :root {
   --w: 1280px;
+}
+@font-face{
+  font-family: Monaco;
+  src: url("@/assets/fonts/Monaco-1.ttf");
 }
 
 #app,
