@@ -4,7 +4,6 @@ export interface room {
   id?: number;
   name: string;
   user: number;
-  active?: boolean;
   checked?: boolean;
 }
 

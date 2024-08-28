@@ -17,21 +17,12 @@ const addRoomData = reactive({
   user: 0,
 } as room);
 
-function isExRoom(rooms: any) {
-  for (let key in rooms) {
-    if (rooms[key].length) {
-      return true;
-    }
-  }
-  return false;
-}
 async function getRoomList() {
   try {
-    const exRoom = await roomStore.fetchRoomList(user);
-    const ex = isExRoom(exRoom);
-    if (!ex) {
+    await roomStore.fetchRoomList(user);
+    if (roomStore.todayObject.data.length === 0) {
       // 如果会话列表为空，则创建一个新会话并重新获取列表
-      await roomStore.fetchAddRoom({ name: "新会话", user, active: true });
+      await roomStore.fetchAddRoom({ name: "新会话", user });
       await roomStore.fetchRoomList(user);
     }
   } catch (error) {
@@ -40,17 +31,11 @@ async function getRoomList() {
 }
 
 // 删除会话的处理函数
-async function delRoom(room: room) {
-  if (roomStore.roomList.length <= 1) {
-    return ElNotification({
-      message: "最少留一个会话",
-      type: "error",
-    });
-  }
+async function delRoom(room: room, objcet: any) {
 
-  if (room.active) {
+  if (objcet.date === '今天' && objcet.data.length <= 1) {
     return ElNotification({
-      message: "默认会话不能删除",
+      message: "今天最少留一个会话",
       type: "error",
     });
   }
@@ -72,7 +57,7 @@ async function delRoom(room: room) {
     } else {
       ElMessage.error("删除失败，稍后重试");
     }
-  } catch (error) {}
+  } catch (error) { }
 }
 
 function openEdit(room: room) {
@@ -111,8 +96,9 @@ async function addRoom(inValue: any) {
   try {
     const res = await addRoomApi({ user, name: inValue.value });
     if (res.code < 400) {
+      roomStore.activeRoom = res.data
+      
       await getRoomList();
-      await toggleRoom(res.data);
       ElMessage.success("添加成功");
     }
   } catch (error) {
@@ -123,26 +109,15 @@ async function addRoom(inValue: any) {
   }
 }
 
-async function toggleRoom(room: room) {
-  const activeRoom = roomStore.activeRoom;
-  if (activeRoom.id === room.id) {
-    return;
-  }
-  activeRoom.active = false;
-  room.active = true;
-
-  const rooms = [activeRoom, room];
-  await roomStore.fetchUpdateActive(rooms);
-  getRoomList();
+function handleToggleRoom(room:any){
+  roomStore.activeRoom = room
 }
 
 getRoomList();
 </script>
 
 <template>
-  <div
-    class="w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col"
-  >
+  <div class="w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col">
     <!-- 顶部 -->
     <div class="flex px-[10px] justify-between items-center">
       <h2 class="py-[5px] text-center text-slate-500 font-semibold">
@@ -156,43 +131,18 @@ getRoomList();
     <!-- 会话列表 -->
     <div class="flex-1 overflow-auto">
       <!-- 新增会话 -->
-      <RoomCard
-        v-show="isAdd"
-        :room="addRoomData"
-        :isEdit="true"
-        :isAdd="isAdd"
-        @add="addRoom"
-      />
+      <RoomCard v-show="isAdd" :room="addRoomData" :isEdit="true" :isAdd="isAdd" @add="addRoom" />
       <!-- 列表 -->
-      <el-collapse
-        :model-value="['今天', '昨天', '三天前', '七天前', '一个月前']"
-      >
-        <el-collapse-item
-          :name="key"
-          v-for="(room, key) in roomStore.roomList"
-          :key="key"
-        >
+      <el-collapse :model-value="['today','yesterday','three_days_ago','seven_days_ago','one_month_ago']">
+        <el-collapse-item :name="key" v-for="(rooms, key) in roomStore.roomList" :key="key">
           <template #title>
-            <span class="mx-[10px] font-semibold">{{ key }}</span>
+            <span class="mx-[10px] font-semibold">{{ rooms.date }}</span>
           </template>
 
-          <el-empty
-            v-if="!room.length"
-            description="暂无新对话"
-            :image-size="36"
-            :image="empty"
-          />
+          <el-empty v-if="!rooms.data.length" description="暂无新对话" :image-size="36" :image="empty" />
 
-          <RoomCard
-            v-for="item in room"
-            :key="item.id"
-            :room="item"
-            :isEdit="item.checked"
-            @del="delRoom"
-            @edit="editRoom"
-            @open-edit="openEdit"
-            @toggle-room="toggleRoom"
-          />
+          <RoomCard v-for="item in rooms.data" :key="item.id" :room="item" :isEdit="item.checked" :objcet="rooms"
+            @del="delRoom" @edit="editRoom" @open-edit="openEdit" @toggle-room="handleToggleRoom"/>
         </el-collapse-item>
       </el-collapse>
     </div>

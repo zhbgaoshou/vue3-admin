@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, watch, nextTick, computed } from "vue";
+import useRoomStore from "@/store/modules/room";
 
-const props = defineProps(["room", "isEdit", "isAdd", "isActive"]);
-const emit = defineEmits(["del", "edit", "open-edit", "add", "toggle-room"]);
+const roomStore = useRoomStore();
+
+const props = defineProps(["room", "isEdit", "isAdd", "isActive",'objcet']);
+const emit = defineEmits(["del", "edit", "open-edit", "add",'toggle-room']);
 
 const inValue = ref(props.room.name);
 const inputDOM = ref({} as HTMLInputElement);
@@ -19,7 +22,7 @@ function addOrEdit() {
 function clickIcon(iconName: string) {
   switch (iconName) {
     case "Delete":
-      emit("del", props.room);
+      emit("del", props.room, props.objcet);
       break;
     case "Edit":
       emit("open-edit", props.room);
@@ -38,6 +41,10 @@ const icons = computed(() => {
   return array;
 });
 
+function toggleRoom(){
+  emit("toggle-room", props.room)
+}
+
 // 当 isEdit 或 isAdd 改变时，自动聚焦输入框
 watch(
   [() => props.isEdit, () => props.isAdd],
@@ -54,12 +61,12 @@ watch(
 
 <template>
   <div
-    :class="{ ' border-[1px] border-black': room.active }"
+    :class="{ ' border-[1px] border-black': room.id === roomStore.activeRoom.id }"
     class="mx-[10px] relative bg-white shadow-sm border-[1px] h-[40px] rounded-lg p-5px flex items-center justify-between my-[5px]"
   >
     <!-- 文本信息 -->
     <div
-      @click="emit('toggle-room', room)"
+      @click="toggleRoom"
       class="h-full flex-1 items-center flex border-r-[1px] border-slate-200 cursor-pointer"
     >
       <p
@@ -70,8 +77,8 @@ watch(
       </p>
       <el-input
         ref="inputDOM"
-        maxlength="12"
-        placeholder="最多12字"
+        maxlength="8"
+        placeholder="最多8字"
         v-show="isEdit || isAdd"
         v-model="inValue"
         @keyup.enter="addOrEdit"

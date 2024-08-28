@@ -66,6 +66,7 @@ function handleToggleModel(model: string) {
           width="max-content"
           popper-class="!rounded-[20px] w-max-[100%]"
           :visible="isShowPopover"
+          transition='None'
         >
           <template #reference>
             <p

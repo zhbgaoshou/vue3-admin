@@ -136,11 +136,12 @@ function handleStopFetch() {
 
 watch(
   () => roomStore.activeRoom,
-  (newRoom, oldRoom) => {
-    if (newRoom && newRoom.active && newRoom?.id !== oldRoom?.id)
-      getMessageList();
+  () => {
+
+    getMessageList();
   }
 );
+getMessageList();
 </script>
 
 <script lang="ts">
@@ -154,45 +155,24 @@ export default {
     <!-- 聊天消息区域 -->
     <div class="flex flex-1 flex-col">
       <!-- 聊天框(滚动区域) -->
-      <div
-        class="flex-1 scrollbar-hidden overflow-auto"
-        @scroll="chatScroll"
-        ref="tp"
-      >
+      <div class="flex-1 scrollbar-hidden overflow-auto" @scroll="chatScroll" ref="tp">
         <!-- 聊天记录不是空 -->
-        <Message
-          v-show="chatStore.messageList && chatStore.messageList.length >= 1"
-          v-for="(item, index) in chatStore.messageList"
-          :key="index"
-          :role="item.role"
-          :content="item.content"
-          :dateTime="item.date_time"
-        />
+        <Message v-show="chatStore.messageList && chatStore.messageList.length >= 1"
+          v-for="(item, index) in chatStore.messageList" :key="index" :role="item.role" :content="item.content"
+          :dateTime="item.date_time" />
         <!-- 正在生成的消息 -->
-        <Message
-          role="assistant"
-          :content="text || loadingText"
-          v-show="text || loadingText"
-        />
+        <Message role="assistant" :content="text || loadingText" v-show="text || loadingText" />
 
-        <div
-          class="h-full flex justify-center items-center"
-          v-show="chatStore.messageList && chatStore.messageList.length < 1"
-        >
+        <div class="h-full flex justify-center items-center"
+          v-show="chatStore.messageList && chatStore.messageList.length < 1">
           <el-empty description="暂无记录" />
         </div>
       </div>
 
       <!-- 输入框 -->
       <div class="h-max">
-        <Input
-          :is-generation="isGeneration"
-          @send="send"
-          @file="file"
-          @goto-bottom="scrollBottom"
-          :is-goto-bottom="isUserScrolling"
-          @stop-fetch="handleStopFetch"
-        />
+        <Input :is-generation="isGeneration" @send="send" @file="file" @goto-bottom="scrollBottom"
+          :is-goto-bottom="isUserScrolling" @stop-fetch="handleStopFetch" />
       </div>
     </div>
     <!-- 会话列表 -->
