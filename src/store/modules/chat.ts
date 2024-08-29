@@ -35,7 +35,6 @@ const useChatStore = defineStore("chat", () => {
   }
 
   async function fetchMessageList(user: number, room: number) {
-    messageList.value = [];
     const res = await messageApi(user, room);
     if (res.code === 200) {
       messageList.value = res.data;

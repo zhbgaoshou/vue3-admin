@@ -38,7 +38,7 @@ const userStore = useUserStore();
       </div>
       <!-- 消息 -->
       <div
-        class="bg-white font-['Monaco'] shadow-sm w-max max-w-[100%] border-[1px] rounded-[30px] overflow-hidden"
+        class="bg-white font-['Monaco'] shadow-sm max-w-[100%] border-[1px] rounded-[30px] overflow-hidden"
       >
         <!-- ai返回来的消息 -->
         <MdPreview

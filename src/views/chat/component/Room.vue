@@ -8,22 +8,29 @@ import type { room } from "@/api/room/type";
 import { ref, reactive } from "vue";
 import empty from "@/assets/images/room_null.png";
 
+const emit = defineEmits(["get-message-list"]);
 const roomStore = useRoomStore();
-const { user } = useUserStore();
+const { user_id, toggleRoom } = useUserStore();
+const userStore = useUserStore();
 
 let isAdd = ref(false);
 const addRoomData = reactive({
   name: "",
   user: 0,
-} as room);
+} as any);
 
 async function getRoomList() {
   try {
-    await roomStore.fetchRoomList(user);
+    await roomStore.fetchRoomList(user_id);
     if (roomStore.todayObject.data.length === 0) {
       // 如果会话列表为空，则创建一个新会话并重新获取列表
-      await roomStore.fetchAddRoom({ name: "新会话", user });
-      await roomStore.fetchRoomList(user);
+      const res = await roomStore.fetchAddRoom({
+        name: "新会话",
+        user: user_id,
+      });
+      await toggleRoom({ room_id: res.id });
+      userStore.default_room_id = res.id as number;
+      await roomStore.fetchRoomList(user_id);
     }
   } catch (error) {
     console.error("获取会话列表时出错:", error); // 更加详细的错误日志
@@ -31,9 +38,8 @@ async function getRoomList() {
 }
 
 // 删除会话的处理函数
-async function delRoom(room: room, objcet: any) {
-
-  if (objcet.date === '今天' && objcet.data.length <= 1) {
+async function delRoom(room: room, object: any) {
+  if (object.date === "今天" && object.data.length <= 1) {
     return ElNotification({
       message: "今天最少留一个会话",
       type: "error",
@@ -57,7 +63,7 @@ async function delRoom(room: room, objcet: any) {
     } else {
       ElMessage.error("删除失败，稍后重试");
     }
-  } catch (error) { }
+  } catch (error) {}
 }
 
 function openEdit(room: room) {
@@ -94,11 +100,10 @@ async function addRoom(inValue: any) {
     return;
   }
   try {
-    const res = await addRoomApi({ user, name: inValue.value });
+    const res = await addRoomApi({ user: user_id, name: inValue.value });
     if (res.code < 400) {
-      roomStore.activeRoom = res.data
-      
       await getRoomList();
+      handleToggleRoom(res.data);
       ElMessage.success("添加成功");
     }
   } catch (error) {
@@ -109,15 +114,18 @@ async function addRoom(inValue: any) {
   }
 }
 
-function handleToggleRoom(room:any){
-  roomStore.activeRoom = room
+async function handleToggleRoom(room: any) {
+  await toggleRoom({ room_id: room.id });
+  userStore.default_room_id = room.id;
 }
 
 getRoomList();
 </script>
 
 <template>
-  <div class="w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col">
+  <div
+    class="w-[180px] bg-white border-[1px] border-r-0 border-t-0 h-full flex-col"
+  >
     <!-- 顶部 -->
     <div class="flex px-[10px] justify-between items-center">
       <h2 class="py-[5px] text-center text-slate-500 font-semibold">
@@ -131,18 +139,50 @@ getRoomList();
     <!-- 会话列表 -->
     <div class="flex-1 overflow-auto">
       <!-- 新增会话 -->
-      <RoomCard v-show="isAdd" :room="addRoomData" :isEdit="true" :isAdd="isAdd" @add="addRoom" />
+      <RoomCard
+        v-show="isAdd"
+        :room="addRoomData"
+        :isEdit="true"
+        :isAdd="isAdd"
+        @add="addRoom"
+      />
       <!-- 列表 -->
-      <el-collapse :model-value="['today','yesterday','three_days_ago','seven_days_ago','one_month_ago']">
-        <el-collapse-item :name="key" v-for="(rooms, key) in roomStore.roomList" :key="key">
+      <el-collapse
+        :model-value="[
+          'today',
+          'yesterday',
+          'three_days_ago',
+          'seven_days_ago',
+          'one_month_ago',
+        ]"
+      >
+        <el-collapse-item
+          :name="key"
+          v-for="(rooms, key) in roomStore.roomList"
+          :key="key"
+        >
           <template #title>
             <span class="mx-[10px] font-semibold">{{ rooms.date }}</span>
           </template>
 
-          <el-empty v-if="!rooms.data.length" description="暂无新对话" :image-size="36" :image="empty" />
+          <el-empty
+            v-if="!rooms.data.length"
+            description="暂无新对话"
+            :image-size="36"
+            :image="empty"
+          />
 
-          <RoomCard v-for="item in rooms.data" :key="item.id" :room="item" :isEdit="item.checked" :objcet="rooms"
-            @del="delRoom" @edit="editRoom" @open-edit="openEdit" @toggle-room="handleToggleRoom"/>
+          <RoomCard
+            v-for="item in rooms.data"
+            :key="item.id"
+            :room="item"
+            :isEdit="item.checked"
+            :object="rooms"
+            @del="delRoom"
+            @edit="editRoom"
+            @open-edit="openEdit"
+            @toggle-room="handleToggleRoom"
+          />
         </el-collapse-item>
       </el-collapse>
     </div>

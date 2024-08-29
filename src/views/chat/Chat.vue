@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, provide } from "vue";
+import { ref, nextTick, provide, watch } from "vue";
 
 import Input from "./component/Input.vue";
 import Message from "./component/Message.vue";
@@ -7,20 +7,18 @@ import { chat3Api } from "@/api/chat/chat3";
 import type { chatParams } from "@/api/chat/type";
 import { ElMessage } from "element-plus";
 import useChatStore from "@/store/modules/chat";
-import useRoomStore from "@/store/modules/room";
 import useUserStore from "@/store/modules/user";
 import Room from "./component/Room.vue";
 // @ts-ignore
 import { throttle } from "lodash";
 
 const chatStore = useChatStore();
-const roomStore = useRoomStore();
 const userStore = useUserStore();
 
 async function getMessageList() {
   await chatStore.fetchMessageList(
-    userStore.user,
-    roomStore.activeRoom.id as number
+    userStore.user_id,
+    userStore.default_room_id
   );
 
   await nextTick();
@@ -68,7 +66,7 @@ async function send(content: any) {
 
   const userMessage: chatParams = {
     content: content.value,
-    room: roomStore.activeRoom.id as number,
+    room: userStore.default_room_id,
     role: "user",
     date_time: new Date().toLocaleString(),
   };
@@ -102,7 +100,7 @@ async function send(content: any) {
 
     // 最终生成的完整内容添加到消息列表
     const aiData: chatParams = {
-      room: roomStore.activeRoom.id as number,
+      room: userStore.default_room_id,
       content: text.value,
       role: "assistant",
       date_time: new Date().toLocaleString(),
@@ -133,15 +131,15 @@ function handleStopFetch() {
     loadingText.value = "";
   }
 }
-
 watch(
-  () => roomStore.activeRoom,
-  () => {
-
-    getMessageList();
+  () => userStore.default_room_id,
+  (newId) => {
+    if (newId) getMessageList();
+  },
+  {
+    immediate: true,
   }
 );
-getMessageList();
 </script>
 
 <script lang="ts">
@@ -155,28 +153,49 @@ export default {
     <!-- 聊天消息区域 -->
     <div class="flex flex-1 flex-col">
       <!-- 聊天框(滚动区域) -->
-      <div class="flex-1 scrollbar-hidden overflow-auto" @scroll="chatScroll" ref="tp">
+      <div
+        class="flex-1 scrollbar-hidden overflow-auto"
+        @scroll="chatScroll"
+        ref="tp"
+      >
         <!-- 聊天记录不是空 -->
-        <Message v-show="chatStore.messageList && chatStore.messageList.length >= 1"
-          v-for="(item, index) in chatStore.messageList" :key="index" :role="item.role" :content="item.content"
-          :dateTime="item.date_time" />
+        <Message
+          v-show="chatStore.messageList && chatStore.messageList.length >= 1"
+          v-for="(item, index) in chatStore.messageList"
+          :key="index"
+          :role="item.role"
+          :content="item.content"
+          :dateTime="item.date_time"
+        />
         <!-- 正在生成的消息 -->
-        <Message role="assistant" :content="text || loadingText" v-show="text || loadingText" />
+        <Message
+          role="assistant"
+          :content="text || loadingText"
+          v-show="text || loadingText"
+        />
 
-        <div class="h-full flex justify-center items-center"
-          v-show="chatStore.messageList && chatStore.messageList.length < 1">
+        <div
+          class="h-full flex justify-center items-center"
+          v-show="chatStore.messageList && chatStore.messageList.length < 1"
+        >
           <el-empty description="暂无记录" />
         </div>
       </div>
 
       <!-- 输入框 -->
       <div class="h-max">
-        <Input :is-generation="isGeneration" @send="send" @file="file" @goto-bottom="scrollBottom"
-          :is-goto-bottom="isUserScrolling" @stop-fetch="handleStopFetch" />
+        <Input
+          :is-generation="isGeneration"
+          @send="send"
+          @file="file"
+          @goto-bottom="scrollBottom"
+          :is-goto-bottom="isUserScrolling"
+          @stop-fetch="handleStopFetch"
+        />
       </div>
     </div>
     <!-- 会话列表 -->
-    <Room class="hidden md:flex" />
+    <Room class="hidden md:flex" @get-message-list="getMessageList" />
   </div>
 </template>
 

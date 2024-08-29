@@ -7,7 +7,7 @@ export function roomListApi(user: number) {
 }
 
 // 添加会话
-export function addRoomApi(data: room) {
+export function addRoomApi(data: any) {
   return request<any, addRoomRes>({
     url: `/chat/room/`,
     method: "POST",

@@ -1,50 +1,49 @@
 import { defineStore } from "pinia";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { roomListApi, addRoomApi, updateActiveApi } from "@/api/room";
 import type { room } from "@/api/room/type";
 
 const useRoomStore = defineStore("room", () => {
-  const roomList = ref({} as any);
-  const activeRoom = ref(JSON.parse(localStorage.getItem("activeRoom") as string) || {} as any)
+  const roomList = ref<Record<string, any>>({});
 
-  async function fetchRoomList(user: number) {
-    const res = await roomListApi(user);
-    if (res.code < 400) {
-      roomList.value = res.data;
-      if(!activeRoom.value.id){activeRoom.value = res.data.today.data.at(-1)}
-      return res.data;
-    } else {
-      return Promise.reject(new Error("fail"));
+  // Fetch room list and manage active room logic
+  async function fetchRoomList(userId: number) {
+    try {
+      const res = await roomListApi(userId);
+      if (res.code < 400) {
+        roomList.value = res.data;
+        return res;
+      } else {
+        throw new Error("Failed to fetch room list");
+      }
+    } catch (error) {
+      console.error(error);
+      throw error; // Re-throw error to propagate it
     }
   }
 
-  watch(activeRoom, (newValue) => {
-    localStorage.setItem("activeRoom", JSON.stringify(newValue))
-  })
-
+  // Add a new room
   async function fetchAddRoom(data: room) {
     const res = await addRoomApi(data);
     if (res.code < 400) {
       return res.data;
     } else {
-      return Promise.reject(new Error("add room fail"));
+      throw new Error("Failed to add room");
     }
   }
 
+  // Update active rooms
   async function fetchUpdateActive(rooms: room[]) {
     const res = await updateActiveApi(rooms);
     if (res.code === 200) {
       return res;
     } else {
-      return Promise.reject(new Error("fail"));
+      throw new Error("Failed to update active rooms");
     }
   }
 
-  const todayObject = computed(() => {
-    return roomList.value?.today
-  })
-
-
+  // Compute today's room data
+  const todayObject = computed(() => roomList.value?.today || {});
 
   return {
     roomList,
@@ -52,7 +51,6 @@ const useRoomStore = defineStore("room", () => {
     fetchAddRoom,
     fetchUpdateActive,
     todayObject,
-    activeRoom
   };
 });
 

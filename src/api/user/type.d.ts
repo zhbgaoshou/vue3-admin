@@ -19,6 +19,7 @@ export interface userInfo {
   date_joined: string;
   profile: {
     image: string;
+    default_room_id: number;
   };
   is_superuser: boolean;
   is_staff: boolean;

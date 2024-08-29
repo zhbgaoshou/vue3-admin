@@ -11,3 +11,11 @@ export const LoginApi = (data: userParams) =>
 
 // info
 export const InfoApi = () => request.get<any, userInfoRes>(API.Info);
+
+// 修改默认会话
+export const toggleRoomApi = (data: any) =>
+  request<any, any>({
+    url: `user/toggle-room`,
+    method: "PATCH",
+    data,
+  });

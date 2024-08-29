@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, nextTick, computed } from "vue";
-import useRoomStore from "@/store/modules/room";
+import useUserStore from "@/store/modules/user";
 
-const roomStore = useRoomStore();
-
-const props = defineProps(["room", "isEdit", "isAdd", "isActive",'objcet']);
-const emit = defineEmits(["del", "edit", "open-edit", "add",'toggle-room']);
+const userStore = useUserStore();
+const props = defineProps(["room", "isEdit", "isAdd", "isActive", "object"]);
+const emit = defineEmits(["del", "edit", "open-edit", "add", "toggle-room"]);
 
 const inValue = ref(props.room.name);
 const inputDOM = ref({} as HTMLInputElement);
@@ -22,7 +21,7 @@ function addOrEdit() {
 function clickIcon(iconName: string) {
   switch (iconName) {
     case "Delete":
-      emit("del", props.room, props.objcet);
+      emit("del", props.room, props.object);
       break;
     case "Edit":
       emit("open-edit", props.room);
@@ -41,8 +40,8 @@ const icons = computed(() => {
   return array;
 });
 
-function toggleRoom(){
-  emit("toggle-room", props.room)
+function toggleRoom() {
+  emit("toggle-room", props.room);
 }
 
 // 当 isEdit 或 isAdd 改变时，自动聚焦输入框
@@ -61,7 +60,7 @@ watch(
 
 <template>
   <div
-    :class="{ ' border-[1px] border-black': room.id === roomStore.activeRoom.id }"
+    :class="{ 'border-black': room.id === userStore.default_room_id }"
     class="mx-[10px] relative bg-white shadow-sm border-[1px] h-[40px] rounded-lg p-5px flex items-center justify-between my-[5px]"
   >
     <!-- 文本信息 -->
