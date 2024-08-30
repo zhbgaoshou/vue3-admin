@@ -11,6 +11,7 @@ import useUserStore from "@/store/modules/user";
 import Room from "./component/Room.vue";
 // @ts-ignore
 import { throttle } from "lodash";
+import messageImage from '@/assets/images/message_null.png'
 
 const chatStore = useChatStore();
 const userStore = useUserStore();
@@ -173,12 +174,12 @@ export default {
           :content="text || loadingText"
           v-show="text || loadingText"
         />
-
+        <!-- 聊天记录为空 -->
         <div
           class="h-full flex justify-center items-center"
           v-show="chatStore.messageList && chatStore.messageList.length < 1"
         >
-          <el-empty description="暂无记录" />
+          <el-empty description="嘻嘻，没有记录" :image="messageImage"/>
         </div>
       </div>
 
