@@ -114,7 +114,7 @@ async function send(content: any) {
     scrollBottom();
   } catch (error) {
     console.log(error);
-    ElMessage.error("error");
+    ElMessage.error("中止生成");
   } finally {
     isGeneration.value = false;
   }
