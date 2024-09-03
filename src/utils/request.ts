@@ -16,7 +16,9 @@ request.interceptors.request.use(
   function (config) {
     nprogress.start();
     const userStore = useUserStore();
-    config.headers["Authorization"] = `Bearer ${userStore.token}`;
+    if (userStore.token) {
+      config.headers["Authorization"] = `Bearer ${userStore.token}`;
+    }
     // 在发送请求之前做些什么
     return config;
   },

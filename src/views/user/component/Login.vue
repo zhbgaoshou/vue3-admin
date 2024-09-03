@@ -25,8 +25,8 @@ const rules = reactive<FormRules<typeof ruleForm>>({
 });
 
 const ruleForm = reactive({
-  password: "123456",
-  username: "芭德尔",
+  password: "",
+  username: "",
 });
 
 let isLoading = ref(false);
@@ -78,7 +78,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
         <el-input
           v-model="ruleForm.password"
           type="password"
-          autocomplete="off"
+          autocomplete="new-password"
         />
       </el-form-item>
     </el-form>

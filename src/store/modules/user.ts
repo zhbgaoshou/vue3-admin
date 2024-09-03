@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { LoginApi, InfoApi, toggleRoomApi } from "@/api/user";
+import { LoginApi, InfoApi, toggleRoomApi, RegisterApi } from "@/api/user";
 import type { userParams, userInfo } from "@/api/user/type";
 import { setToken, getToken } from "@/utils/local";
 import { staticRoutes, asyncRoutes } from "@/router/routes";
@@ -26,6 +26,18 @@ const useUserStore = defineStore("user", () => {
     } else {
       return Promise.reject(new Error("服务器错误"));
     }
+  }
+
+  // 注册
+  async function fetchRegister(params: any) {
+    const res = await RegisterApi(params);
+    if (res.code < 400) {
+      return "OK";
+    } else {
+      return Promise.reject(new Error(res.msg));
+    }
+
+    return "";
   }
 
   // 获取用户信息
@@ -68,6 +80,7 @@ const useUserStore = defineStore("user", () => {
     menuList,
     default_room_id,
     toggleRoom,
+    fetchRegister,
   };
 });
 

@@ -23,7 +23,7 @@ const userStore = useUserStore();
       <img
         v-if="role == 'assistant'"
         :src="chat3Default.image"
-        class="h-[40px] w-[40px] mx-[5px] rounded-full object-cover"
+        class="h-[40px] w-[40px] mx-[5px] rounded-[10px] object-cover"
       />
     </div>
 
@@ -65,7 +65,7 @@ const userStore = useUserStore();
       <img
         v-if="role == 'user'"
         :src="userStore.userInfo.profile.image"
-        class="h-[40px] w-[40px] mx-[5px] rounded-full object-cover"
+        class="h-[40px] w-[40px] m-[5px] rounded-[10px] object-cover"
       />
     </div>
   </div>

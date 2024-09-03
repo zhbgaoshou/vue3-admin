@@ -3,24 +3,21 @@ import { ref } from "vue";
 
 import Register from "./component/Register.vue";
 import Login from "./component/Login.vue";
-const activeName = ref("first");
-
-function handleClick() {}
+const activeName = ref("login");
 </script>
 
 <template>
   <div class="w-full h-[100%] login-bg">
     <el-tabs
       v-model="activeName"
-      @tab-click="handleClick"
       stretch
       class="w-[50%] max-w-[500px] min-w-[300px] mx-auto pt-[100px]"
     >
-      <el-tab-pane label="登录" name="first">
+      <el-tab-pane label="登录" name="login">
         <Login />
       </el-tab-pane>
-      <el-tab-pane label="注册" name="second">
-        <Register />
+      <el-tab-pane label="注册" name="reg">
+        <Register v-model:activeTab="activeName" />
       </el-tab-pane>
     </el-tabs>
   </div>
