@@ -119,6 +119,14 @@ async function handleToggleRoom(room: any) {
   userStore.default_room_id = room.id;
 }
 
+const collList = ref([
+  "today",
+  "yesterday",
+  "three_days_ago",
+  "seven_days_ago",
+  "one_month_ago",
+]);
+
 getRoomList();
 </script>
 
@@ -148,13 +156,7 @@ getRoomList();
       />
       <!-- 列表 -->
       <el-collapse
-        :model-value="[
-          'today',
-          'yesterday',
-          'three_days_ago',
-          'seven_days_ago',
-          'one_month_ago',
-        ]"
+        :model-value="collList"
       >
         <el-collapse-item
           :name="key"

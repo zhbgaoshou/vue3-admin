@@ -19,19 +19,19 @@ const textareaStyle = {
 
 const icons = computed(() => [
   {
-    name: props.isGeneration ? "SwitchButton" : "Position",
+    name: props.isGeneration ? "CircleCloseFilled" : "Promotion",
     class: props.isGeneration
       ? "!bg-[#000] hover:shadow-none cursor-pointer "
-      : "",
+      : "!bg-sky-500",
   },
 ]);
 
 function clickIcon(iconName: string) {
   switch (iconName) {
-    case "Position":
+    case "Promotion":
       emit("send", input);
       break;
-    case "SwitchButton":
+    case "CircleCloseFilled":
       emit("stop-fetch");
       break;
   }
@@ -103,7 +103,7 @@ function handleToggleModel(model: string) {
       <div class="flex items-center relative">
         <el-icon
           @click="clickIcon(icon.name)"
-          :color="icon.name === 'SwitchButton' ? '#ef4444' : ''"
+          :color="icon.name === 'SwitchButton' ? '#ef4444' : '#fff'"
           v-for="icon in icons"
           size="38"
           :class="icon.class"
